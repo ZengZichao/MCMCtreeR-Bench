@@ -1,0 +1,17 @@
+^app\.R$
+^manifest\.json$
+^renv\.lock$
+^renv$
+^rsconnect$
+^\.rscignore$
+^\.github$
+^docs$
+^mkdocs\.yml$
+^README\.zh-CN\.md$
+^CONTRIBUTING
+^CODE_OF_CONDUCT
+^SECURITY
+^CITATION\.cff$
+^LICENSE$
+^dev$
+^\.Rprofile$

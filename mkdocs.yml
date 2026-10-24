@@ -1,0 +1,72 @@
+site_name: MCMCtreeR Bench
+site_description: Bilingual Shiny application for MCMCtree priors and time-tree visualisation
+site_author: Zichao Zeng
+site_url: https://zengzichao.github.io/MCMCtreeR-Bench/
+copyright: Copyright (C) 2026 Zichao Zeng. GPL-2.0-or-later.
+
+docs_dir: docs
+
+theme:
+  name: material
+  language: en
+  features:
+    - navigation.sections
+    - content.code.copy
+    - content.tabs.link
+  palette:
+    - scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+plugins:
+  - i18n:
+      docs_structure: folder
+      languages:
+        - locale: en
+          name: English
+          default: true
+          build: true
+        - locale: zh
+          name: 中文
+          build: true
+
+nav:
+  - Home: index.md
+  - User guide:
+      - Installation: user-guide/installation.md
+      - Quick start: user-guide/quickstart.md
+      - Module A: user-guide/module-a.md
+      - Module B: user-guide/module-b.md
+      - Export: user-guide/export.md
+      - Troubleshooting: user-guide/troubleshooting.md
+  - Reference:
+      - Parameters: reference/parameters.md
+      - FAQ: reference/faq.md
+      - Glossary: reference/glossary.md
+  - Deployment:
+      - Local: deployment/local.md
+      - Connect Cloud: deployment/connect-cloud.md
+      - Operations: deployment/operations.md
+  - Development:
+      - Architecture: development/architecture.md
+      - Testing: development/testing.md
+      - Contributing: development/contributing.md
+  - About:
+      - Credits: about/credits.md
+      - License: about/license.md
+      - Privacy: about/privacy.md
+      - Citation: about/citation.md
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - tables
+  - toc:
+      permalink: true
+
+strict: true

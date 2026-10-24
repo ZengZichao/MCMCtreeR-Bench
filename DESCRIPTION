@@ -1,0 +1,43 @@
+Package: mcmctreer
+Type: Package
+Title: MCMCtreeR Bench: Prepare MCMCtree Time Priors and Visualise Time Trees
+Version: 0.1.0
+Authors@R:
+    person(given = "Zichao",
+           family = "Zeng",
+           email = "zengzichao@sjtu.edu.cn",
+           role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0001-6553-970X"))
+Description: A bilingual, light/dark-aware Shiny application for preparing
+    MCMCtree time priors with MCMCtreeR and for visualising time-calibrated
+    phylogenies. MCMCtreeR Bench is an independent wrapper around the original
+    MCMCtreeR package.
+License: GPL (>= 2)
+Copyright: Copyright (C) 2026 Zichao Zeng
+Encoding: UTF-8
+URL: https://github.com/ZengZichao/MCMCtreeR-Bench,
+    https://zengzichao-mcmctreer-bench.share.connect.posit.cloud/
+BugReports: https://github.com/ZengZichao/MCMCtreeR-Bench/issues
+Imports:
+    shiny,
+    bslib,
+    htmltools,
+    golem,
+    MCMCtreeR,
+    ape,
+    sn,
+    coda,
+    data.table,
+    pkgload,
+    ragg,
+    svglite
+Remotes:
+    PuttickMacroevolution/MCMCtreeR@2330e7a9916c3929513ee217d3854be993965f6b
+Suggests:
+    testthat (>= 3.0.0),
+    jsonlite,
+    renv,
+    rsconnect
+Config/testthat/edition: 3
+Config/golem: true
+Config/Needs/website: mkdocs-material

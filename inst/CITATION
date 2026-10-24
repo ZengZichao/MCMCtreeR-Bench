@@ -1,0 +1,29 @@
+citHeader("To cite MCMCtreeR Bench in publications, please cite both MCMCtreeR Bench and the original MCMCtreeR paper.")
+
+bibentry(
+  bibtype = "Manual",
+  key = "zeng2026mcmctreergui",
+  title = "MCMCtreeR Bench",
+  author = person(
+    given = "Zichao",
+    family = "Zeng",
+    email = "zengzichao@sjtu.edu.cn",
+    comment = c(ORCID = "0000-0001-6553-970X")
+  ),
+  year = "2026",
+  note = "R package version 0.1.0",
+  url = "https://github.com/ZengZichao/MCMCtreeR-Bench"
+)
+
+bibentry(
+  bibtype = "Article",
+  key = "puttick2019mcmctreer",
+  title = "{MCMCtreeR}: functions to prepare {MCMCtree} analyses and visualize posterior ages on trees",
+  author = person(given = "Mark N.", family = "Puttick"),
+  journal = "Bioinformatics",
+  year = "2019",
+  volume = "35",
+  number = "24",
+  pages = "5321--5322",
+  doi = "10.1093/bioinformatics/btz554"
+)

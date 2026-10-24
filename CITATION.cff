@@ -1,0 +1,32 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite both MCMCtreeR Bench and the original MCMCtreeR paper."
+title: "MCMCtreeR Bench"
+version: "0.1.0"
+date-released: 2026-10-24
+authors:
+  - family-names: Zeng
+    given-names: Zichao
+    email: zengzichao@sjtu.edu.cn
+    orcid: "https://orcid.org/0000-0001-6553-970X"
+url: "https://github.com/ZengZichao/MCMCtreeR-Bench"
+repository-code: "https://github.com/ZengZichao/MCMCtreeR-Bench"
+license: GPL-2.0-or-later
+keywords:
+  - phylogenetics
+  - molecular clock
+  - MCMCtree
+  - Bayesian divergence time
+  - Shiny
+references:
+  - type: article
+    title: "MCMCtreeR: functions to prepare MCMCtree analyses and visualize posterior ages on trees"
+    authors:
+      - family-names: Puttick
+        given-names: Mark N.
+    journal: Bioinformatics
+    volume: 35
+    issue: 24
+    start: 5321
+    end: 5322
+    year: 2019
+    doi: 10.1093/bioinformatics/btz554
