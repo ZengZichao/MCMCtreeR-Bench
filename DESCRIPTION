@@ -40,4 +40,3 @@ Suggests:
     rsconnect
 Config/testthat/edition: 3
 Config/golem: true
-Config/Needs/website: mkdocs-material
