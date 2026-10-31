@@ -96,6 +96,9 @@ classify_warnings <- function(warnings) {
 }
 
 user_notification <- function(message, type = "message", duration = 4) {
+  # Successful actions already update the workbench inline; keep the floating
+  # layer reserved for warnings and errors so it never competes with the work.
+  if (identical(type, "message")) return(invisible(NULL))
   shiny::showNotification(
     shiny::HTML(htmltools::htmlEscape(message)),
     type = type,

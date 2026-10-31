@@ -471,6 +471,15 @@ has_unsaved_state <- function(a, b) {
   isTRUE(a_loaded || b_loaded)
 }
 
+format_parameter_value <- function(value) {
+  value <- as.numeric(value)
+  if (!length(value) || !is.finite(value)) return(as.character(value))
+  if (value != 0 && (abs(value) < 1e-4 || abs(value) >= 1e6)) {
+    return(format(value, scientific = TRUE, digits = 6, trim = TRUE))
+  }
+  format(value, scientific = FALSE, digits = 8, trim = TRUE, drop0trailing = TRUE)
+}
+
 parameter_summary <- function(results) {
   if (is.null(results) || length(results$nodes) == 0) {
     return(data.frame(node = integer(), method = character(), parameters = character()))
@@ -486,7 +495,7 @@ parameter_summary <- function(results) {
       labels <- paste0("p", seq_along(values))
     }
     text <- paste(
-      paste0(labels, "=", format(values, trim = TRUE)),
+      paste0(labels, "=", vapply(values, format_parameter_value, character(1))),
       collapse = ", "
     )
     data.frame(

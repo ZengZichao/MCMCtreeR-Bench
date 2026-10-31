@@ -5,7 +5,7 @@ step2_ui <- function(ns, i18n, a) {
     return(htmltools::tagList(
       htmltools::tags$div(
         class = "step-block",
-        htmltools::tags$h4(i18n$tr("step2_title")),
+        htmltools::tags$h2(class = "step-title", i18n$tr("step2_title")),
         htmltools::tags$p(class = "step-hint", i18n$tr("step2_hint")),
         htmltools::tags$div(class = "alert alert-info app-alert", i18n$tr("a_need_tree"))
       )
@@ -14,30 +14,36 @@ step2_ui <- function(ns, i18n, a) {
 
   choices <- calibration_node_choices(a$phy)
   selected_choices <- if (length(a$selected)) {
-    stats::setNames(as.character(a$selected), paste0("Node ", a$selected))
+    stats::setNames(
+      as.character(a$selected),
+      vapply(a$selected, function(node) i18n$tr("node_label", node), character(1))
+    )
   } else {
-    character()
+    stats::setNames("", i18n$tr("selected_nodes_placeholder"))
   }
 
   htmltools::tagList(
     htmltools::tags$div(
       class = "step-block",
-      htmltools::tags$h4(i18n$tr("step2_title")),
+      htmltools::tags$h2(class = "step-title", i18n$tr("step2_title")),
       htmltools::tags$p(class = "step-hint", i18n$tr("step2_hint")),
       bslib::layout_columns(
         col_widths = c(6, 6),
+        col_widths_sm = c(12, 12),
+        col_widths_xs = c(12, 12),
         htmltools::tags$div(
           shiny::selectInput(
             inputId = ns("manual_node"),
             label = i18n$tr("manual_node_label"),
             choices = choices,
             selected = NULL,
-            width = "100%"
+            width = "100%",
+            selectize = FALSE
           ),
           shiny::actionButton(
             inputId = ns("add_node"),
             label = i18n$tr("btn_add_node"),
-            class = "btn-outline-primary btn-sm"
+            class = "btn-primary btn-sm"
           ),
           htmltools::tags$p(class = "form-hint", i18n$tr("manual_node_hint"))
         ),
@@ -46,14 +52,18 @@ step2_ui <- function(ns, i18n, a) {
             inputId = ns("remove_node_sel"),
             label = i18n$tr("selected_nodes_title"),
             choices = selected_choices,
-            selected = NULL,
-            width = "100%"
+            selected = if (length(a$selected)) as.character(a$selected[1]) else "",
+            width = "100%",
+            selectize = FALSE
           ),
           shiny::actionButton(
             inputId = ns("remove_node"),
             label = i18n$tr("btn_remove_node"),
             class = "btn-outline-danger btn-sm"
-          )
+          ) |>
+            htmltools::tagAppendAttributes(
+              disabled = if (length(a$selected)) NULL else "disabled"
+            )
         )
       ),
       shiny::uiOutput(ns("node_tips"))
@@ -68,10 +78,15 @@ a_add_node <- function(state, set_a, bump, i18n, node) {
     return(invisible(FALSE))
   }
   node <- suppressWarnings(as.integer(node))
-  if (!is.finite(node) || is.na(node)) {
-    user_notification(i18n$tr("err_invalid_node", node), type = "error")
+  if (!length(node)) {
+    user_notification(i18n$tr("err_no_node_selected"), type = "warning")
     return(invisible(FALSE))
   }
+  if (is.na(node[1])) {
+    user_notification(i18n$tr("err_invalid_node", node[1]), type = "error")
+    return(invisible(FALSE))
+  }
+  node <- node[1]
   if (node %in% as.integer(a$selected)) return(invisible(FALSE))
   if (!node_is_internal(a$phy, node)) {
     key <- if (node >= 1 && node <= ape::Ntip(a$phy)) "err_tip_node" else "err_invalid_node"
@@ -96,8 +111,15 @@ a_add_node <- function(state, set_a, bump, i18n, node) {
 a_remove_node <- function(state, set_a, bump, i18n, node) {
   a <- state$a
   node <- suppressWarnings(as.integer(node))
-  if (is.na(node)) return(invisible(FALSE))
-  if (!node %in% as.integer(a$selected)) return(invisible(FALSE))
+  if (!length(node) || is.na(node[1])) {
+    user_notification(i18n$tr("err_no_node_selected"), type = "warning")
+    return(invisible(FALSE))
+  }
+  node <- node[1]
+  if (!node %in% as.integer(a$selected)) {
+    user_notification(i18n$tr("err_no_node_selected"), type = "warning")
+    return(invisible(FALSE))
+  }
   a$calibrated <- remove_calibration(a$calibrated, node)
   a$selected <- setdiff(as.integer(a$selected), node)
   a$results <- NULL
@@ -127,7 +149,7 @@ mod_a_select_nodes_server <- function(input, output, session, ns, state, set_a,
     }
     htmltools::tags$div(
       class = "node-tip-list",
-      htmltools::tags$h5(i18n$tr("node_tips_title")),
+      htmltools::tags$h3(i18n$tr("node_tips_title")),
       lapply(calibrated, function(one) {
         tips <- as.character(one$tips)
         shown <- tips

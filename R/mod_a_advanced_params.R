@@ -10,7 +10,7 @@ step4_ui <- function(ns, i18n, a) {
     return(htmltools::tagList(
       htmltools::tags$div(
         class = "step-block",
-        htmltools::tags$h4(i18n$tr("step4_title")),
+        htmltools::tags$h2(class = "step-title", i18n$tr("step4_title")),
         htmltools::tags$p(class = "step-hint", i18n$tr("step4_hint")),
         htmltools::tags$div(class = "alert alert-info app-alert", i18n$tr("a_need_nodes"))
       )
@@ -65,11 +65,18 @@ step4_ui <- function(ns, i18n, a) {
       })
     }
 
-    htmltools::tags$div(
+    # Three nodes x six fields each is ~2200px of form on a phone. Collapse the
+    # cards, but keep any node that already holds a value or an error open so
+    # collapsing never hides something the user needs to see.
+    has_values <- length(one$adv_raw %||% list()) > 0
+    has_errors <- length(adv_field_issues(one)) > 0
+
+    htmltools::tags$details(
       class = "adv-card",
-      htmltools::tags$div(
+      open = if (has_values || has_errors) "" else NULL,
+      htmltools::tags$summary(
         class = "adv-card-head",
-        htmltools::tags$h5(i18n$tr("adv_for_node", node, one$method)),
+        htmltools::tags$h4(i18n$tr("adv_for_node", node, one$method)),
         htmltools::tags$p(class = "form-hint", i18n$tr(paste0("method_", one$method, "_desc")))
       ),
       if (identical(one$method, "gamma")) {
@@ -82,7 +89,7 @@ step4_ui <- function(ns, i18n, a) {
   htmltools::tagList(
     htmltools::tags$div(
       class = "step-block",
-      htmltools::tags$h4(i18n$tr("step4_title")),
+      htmltools::tags$h2(class = "step-title", i18n$tr("step4_title")),
       htmltools::tags$p(class = "step-hint", i18n$tr("step4_hint")),
       cards
     )

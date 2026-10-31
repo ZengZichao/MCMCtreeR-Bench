@@ -1,249 +1,1787 @@
-/* MCMCtreeR Bench styles.
-   Only Bootstrap 5.3 CSS variables are used for colours so that light and
-   dark modes remain consistent. No external fonts, icons or CDNs. */
+/* MCMCtreeR Bench — Apple-inspired design system.
+   Tokens, type, surfaces and components follow the Apple design analysis:
+   one Action Blue accent, SF system type, parchment canvas, near-black tiles,
+   hairline utility cards, pill actions and a single product shadow. */
 
 :root {
-  --mcmctreer-radius: 0.65rem;
-  --mcmctreer-gap: 0.75rem;
+  --app-canvas: #ffffff;
+  --app-parchment: #f5f5f7;
+  --app-pearl: #fafafc;
+  --app-card: #ffffff;
+  --app-field: #ffffff;
+  --app-ink: #1d1d1f;
+  --app-ink-80: #333333;
+  --app-muted: #6e6e73;
+  --app-hairline: #e0e0e0;
+  --app-divider: #f0f0f0;
+  --app-primary: #0066cc;
+  --app-primary-hover: #0071e3;
+  --app-link: #0066cc;
+  --app-focus: #0071e3;
+  --app-focus-ring: rgba(0, 113, 227, 0.22);
+  --app-on-primary: #ffffff;
+  --app-tile: #272729;
+  --app-tile-2: #2a2a2c;
+  --app-tile-3: #252527;
+  --app-on-dark: #ffffff;
+  --app-body-dark: #cccccc;
+  --app-success: #1f7a33;
+  --app-danger: #d70015;
+  --app-warning: #8a6d00;
+  --app-success-bg: #f3faf5;
+  --app-success-border: #d8ecdd;
+  --app-danger-bg: #fff6f6;
+  --app-danger-border: #f6d9da;
+  --app-warning-bg: #fffbf2;
+  --app-warning-border: #f0e4c6;
+  --app-frosted: rgba(250, 250, 252, 0.82);
+  --app-selection-bg: rgba(0, 102, 204, 0.16);
+  --app-accent: #0066cc;
+  --app-nav-edge: rgba(0, 0, 0, 0.08);
+  --app-shadow-product: rgba(0, 0, 0, 0.22) 3px 5px 30px 0;
+  --app-radius-lg: 18px;
+  --app-radius-md: 11px;
+  --app-radius-sm: 8px;
+  --app-radius-pill: 9999px;
+  --app-font-display: "SF Pro Display", -apple-system, BlinkMacSystemFont,
+    "Helvetica Neue", Inter, system-ui, sans-serif;
+  --app-font-text: "SF Pro Text", -apple-system, BlinkMacSystemFont,
+    "Helvetica Neue", Inter, system-ui, sans-serif;
+  --app-font-code: "SF Mono", SFMono-Regular, ui-monospace, Menlo, Consolas,
+    monospace;
+}
+
+[data-bs-theme="dark"] {
+  --app-canvas: #000000;
+  --app-parchment: #1d1d1f;
+  --app-pearl: #2a2a2c;
+  --app-card: #272729;
+  --app-field: #2a2a2c;
+  --app-ink: #f5f5f7;
+  --app-ink-80: #e8e8ed;
+  --app-muted: #a1a1a6;
+  --app-hairline: #3a3a3c;
+  --app-divider: #2f2f31;
+  --app-primary: #0066cc;
+  --app-primary-hover: #0071e3;
+  --app-link: #2997ff;
+  --app-focus: #2997ff;
+  --app-focus-ring: rgba(41, 151, 255, 0.3);
+  --app-tile: #272729;
+  --app-tile-2: #2a2a2c;
+  --app-tile-3: #252527;
+  --app-success: #30d158;
+  --app-danger: #ff6961;
+  --app-warning: #ffd60a;
+  --app-success-bg: #16251a;
+  --app-success-border: #26472e;
+  --app-danger-bg: #2a1718;
+  --app-danger-border: #4a2426;
+  --app-warning-bg: #292414;
+  --app-warning-border: #4b3f1b;
+  --app-frosted: rgba(39, 39, 41, 0.84);
+  --app-selection-bg: rgba(41, 151, 255, 0.28);
+  --app-accent: #2997ff;
+  --app-nav-edge: rgba(255, 255, 255, 0.12);
+  --app-shadow-product: rgba(0, 0, 0, 0.55) 3px 5px 30px 0;
+  --bs-link-color: #2997ff;
+  --bs-link-hover-color: #5ab0ff;
+  --bs-body-color: #f5f5f7;
+  --bs-body-bg: #1d1d1f;
+  --bs-border-color: #3a3a3c;
+  --bs-border-color-translucent: rgba(255, 255, 255, 0.16);
+  --bs-primary: #2997ff;
+  --bs-success: #30d158;
+  --bs-danger: #ff6961;
+  --bs-warning: #ffd60a;
+  --bs-info: #2997ff;
+  --bs-emphasis-color: #f5f5f7;
+  --bs-secondary-color: #a1a1a6;
+  --bs-tertiary-color: #98989d;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+html[lang^="zh"] body,
+html[lang^="zh"] h1,
+html[lang^="zh"] h2,
+html[lang^="zh"] h3,
+html[lang^="zh"] h4,
+html[lang^="zh"] h5,
+html[lang^="zh"] h6,
+html[lang^="zh"] .btn,
+html[lang^="zh"] .form-control,
+html[lang^="zh"] .hero-title,
+html[lang^="zh"] .hero-lead,
+html[lang^="zh"] .step-title {
+  letter-spacing: 0;
 }
 
 body {
   min-height: 100vh;
+  margin: 0;
+  overflow-x: clip;
+  background: var(--app-parchment);
+  color: var(--app-ink);
+  font-family: var(--app-font-text);
+  font-size: 17px;
+  line-height: 1.47;
+  letter-spacing: -0.022em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
-.app-brand {
-  font-weight: 650;
-  letter-spacing: 0.01em;
+.bslib-page-navbar > .container-fluid {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.tab-content > .tab-pane {
+  margin-top: 0 !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+  font-family: var(--app-font-display);
+  font-weight: 600;
+  color: var(--app-ink);
+  letter-spacing: -0.022em;
+}
+
+p {
+  color: inherit;
+}
+
+a {
+  color: var(--app-link);
+  text-decoration: none;
+}
+
+a:hover,
+a:focus {
+  color: var(--app-link);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--app-focus);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--app-selection-bg);
+  color: var(--app-ink);
+}
+
+/* -------------------------------------------------------------------------
+   Global navigation — the only pure-black surface on most pages.
+   ------------------------------------------------------------------------- */
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: #000000 !important;
+  box-shadow: none;
+}
+
+/* bslib kills the navbar border at (0,2,0); restate above it so the header
+   separates from --app-parchment, which is only 3% brighter in dark mode. */
+.bslib-page-navbar > .navbar {
+  border-bottom: 1px solid var(--app-nav-edge) !important;
+}
+
+.navbar > .container-fluid {
+  display: flex;
+  align-items: center;
+  max-width: 1440px;
+  min-height: 44px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  color: #f5f5f7;
+  font-family: var(--app-font-display);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 44px;
+  letter-spacing: -0.022em;
+}
+
+.navbar-brand:hover,
+.navbar-brand:focus {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.app-brand-lockup {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.app-mark {
+  flex: none;
+  color: currentColor;
 }
 
 .app-version {
-  margin-left: 0.45rem;
-  color: var(--bs-secondary-color);
+  margin-left: 0;
+  color: #86868b;
+  font-family: var(--app-font-text);
+  font-size: 12px;
   font-weight: 400;
+  /* Inheriting the brand's 44px line-height pushed the smaller glyphs 6.5px
+     below the brand text; a tight box lets flex centering align the two. */
+  line-height: 1;
+  letter-spacing: -0.01em;
 }
 
-.navbar .form-group,
-.navbar .shiny-input-container {
-  margin-bottom: 0;
-}
-
-.lang-switch,
-.theme-switch {
+.navbar-nav {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 2px;
 }
 
-.lang-switch select,
-.theme-switch select {
-  min-width: 6.5rem;
+.navbar .nav-link {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 14px;
+  color: #d2d2d7;
+  font-family: var(--app-font-text);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.01em;
 }
 
-.lang-switch label,
-.theme-switch label {
-  margin-bottom: 0;
+.navbar .nav-link:hover,
+.navbar .nav-link:focus {
+  color: #ffffff;
+  text-decoration: none;
 }
 
-.module-a {
-  padding: 0.75rem 0.25rem 1.5rem;
+.navbar .nav-link.active {
+  color: #ffffff;
+  background: transparent;
+  text-decoration: none;
+  box-shadow: inset 0 -2px 0 #2997ff;
+}
+
+.navbar .nav-link::after {
+  display: none;
+}
+
+.bslib-nav-spacer {
+  flex: 1 1 auto;
+}
+
+.navbar .bslib-nav-item {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0;
+}
+
+.navbar .lang-switch,
+.navbar .theme-switch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navbar .nav-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navbar .lang-switch .shiny-input-container,
+.navbar .theme-switch .shiny-input-container {
+  width: auto !important;
+  margin: 0;
+}
+
+.navbar .form-group > label,
+.navbar label.control-label {
+  display: none;
+}
+
+.navbar .lang-switch label.control-label,
+.navbar .theme-switch label.control-label {
+  position: absolute !important;
+  display: block !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.navbar select.form-control {
+  width: 96px;
+  height: 32px;
+  min-height: 32px;
+  padding: 0 24px 0 10px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: var(--app-radius-sm);
+  background-color: transparent;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23d2d2d7' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 10px 6px;
+  color: #d2d2d7;
+  font-family: var(--app-font-text);
+  font-size: 12px;
+  line-height: 32px;
+  letter-spacing: -0.01em;
+  appearance: none;
+  box-shadow: none;
+}
+
+.navbar .theme-switch select.form-control {
+  width: 132px;
+}
+
+.navbar select.form-control:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #ffffff;
+}
+
+.navbar select.form-control:focus {
+  border-color: #2997ff;
+  box-shadow: 0 0 0 2px rgba(41, 151, 255, 0.35);
+  outline: none;
+}
+
+.navbar .theme-switch bslib-input-dark-mode {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  color: #d2d2d7;
+  font-size: 12px;
+}
+
+.navbar .theme-switch bslib-input-dark-mode:hover {
+  color: #ffffff;
+}
+
+.navbar-toggler {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: var(--app-radius-sm);
+  background-color: transparent;
+  background-image: none;
+  opacity: 1;
+}
+
+.navbar-toggler::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 18px;
+  height: 1.5px;
+  border-radius: 2px;
+  background: #f5f5f7;
+  box-shadow: 0 -6px 0 #f5f5f7, 0 6px 0 #f5f5f7;
+  transform: translate(-50%, -50%);
+}
+
+.navbar-toggler:hover,
+.navbar-toggler:focus {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.navbar-collapse {
+  border-top: 0;
+  box-shadow: none;
+}
+
+@media (max-width: 991.98px) {
+  .navbar-collapse.show,
+  .navbar-collapse.collapsing {
+    margin: 0 -32px;
+    padding: 8px 32px 18px;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    background: #000000;
+  }
+
+  .navbar-nav {
+    align-items: flex-start;
+    gap: 0;
+  }
+
+  .navbar .nav-link {
+    min-height: 44px;
+    padding: 0;
+    font-size: 14px;
+  }
+
+  .navbar .bslib-nav-item {
+    min-height: 44px;
+  }
+
+  .navbar .lang-switch,
+  .navbar .theme-switch {
+    padding: 10px 0 2px;
+  }
+
+  .navbar select.form-control {
+    width: 120px;
+    height: 36px;
+    min-height: 36px;
+    line-height: 36px;
+  }
+
+  .navbar .theme-switch bslib-input-dark-mode {
+    height: 36px;
+  }
+
+  .navbar .theme-switch select.form-control {
+    width: 150px;
+  }
+}
+
+/* -------------------------------------------------------------------------
+   Hero tiles — centered display type with generous air.
+   ------------------------------------------------------------------------- */
+
+.hero {
+  padding: 72px 0 64px;
+  background: var(--app-canvas);
+  color: var(--app-ink);
+}
+
+.hero-inner {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 0 32px;
+  text-align: center;
+}
+
+.hero-eyebrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 0 0 14px;
+  color: var(--app-muted);
+  font-family: var(--app-font-text);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.01em;
+}
+
+.hero-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--app-primary);
+}
+
+.hero-title {
+  margin: 0 0 12px;
+  color: inherit;
+  font-family: var(--app-font-display);
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.022em;
+}
+
+.hero-lead {
+  max-width: 700px;
+  margin: 0 auto;
+  color: var(--app-muted);
+  font-family: var(--app-font-text);
+  font-size: 21px;
+  font-weight: 400;
+  line-height: 1.38;
+  letter-spacing: 0.002em;
+}
+
+.hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 26px;
+}
+
+.hero-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 12px;
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--app-radius-pill);
+  background: var(--app-pearl);
+  color: var(--app-muted);
+  font-family: var(--app-font-text);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+/* -------------------------------------------------------------------------
+   Workbench — parchment field with white utility cards (18px, hairline).
+   ------------------------------------------------------------------------- */
+
+.workbench {
+  padding: 32px 0 72px;
+  background: var(--app-parchment);
+}
+
+.workbench-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+.workbench-grid {
+  display: grid;
+  grid-template-columns: 244px minmax(0, 1fr) 400px;
+  gap: 20px;
+  align-items: start;
+}
+
+.surface-card {
+  min-width: 0;
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--app-radius-lg);
+  background: var(--app-card);
+  box-shadow: none;
 }
 
 .step-nav {
   position: sticky;
-  top: 1rem;
+  top: 16px;
+  padding: 22px 18px;
   align-self: start;
+}
+
+.step-main {
+  min-width: 0;
+  padding: 40px 44px;
+  align-self: start;
+}
+
+.a-preview {
+  position: sticky;
+  top: 16px;
+  min-width: 0;
+  padding: 24px;
+  align-self: start;
+}
+
+.rail-title {
+  margin: 0 0 14px;
+  padding: 0 11px;
+  color: var(--app-muted);
+  font-family: var(--app-font-text);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  text-align: left;
 }
 
 .step-list {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
-}
-
-.step-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.55rem;
-  width: 100%;
-  text-align: left;
-  border: 1px solid var(--bs-border-color);
-  border-radius: var(--mcmctreer-radius);
-  background: var(--bs-body-bg);
-  color: var(--bs-body-color);
-  padding: 0.45rem 0.6rem;
-  transition: background-color 120ms ease, border-color 120ms ease;
-}
-
-.step-btn:hover:not(:disabled) {
-  border-color: var(--bs-primary);
-  background: var(--bs-tertiary-bg);
-}
-
-.step-btn.active {
-  border-color: var(--bs-primary);
-  background: var(--bs-primary-bg-subtle);
-  color: var(--bs-primary-text-emphasis);
-}
-
-.step-btn.done {
-  border-color: var(--bs-success-border-subtle);
-}
-
-.step-btn.locked {
-  opacity: 0.55;
-  cursor: not-allowed;
+  gap: 8px;
 }
 
 .step-index {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.6rem;
-  height: 1.6rem;
-  flex: 0 0 1.6rem;
+  flex: 0 0 26px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
-  background: var(--bs-secondary-bg);
-  color: var(--bs-secondary-color);
-  font-size: 0.82rem;
-  font-weight: 650;
+  background: var(--app-parchment);
+  color: var(--app-muted);
+  font-family: var(--app-font-text);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
 }
 
 .step-btn.active .step-index {
-  background: var(--bs-primary);
-  color: var(--bs-primary-bg-subtle);
+  background: var(--app-focus);
+  color: #ffffff;
+}
+
+[data-bs-theme="dark"] .step-btn.active .step-index {
+  color: #000000;
+}
+
+.step-btn.done .step-index {
+  background: var(--app-pearl);
+  color: var(--app-link);
 }
 
 .step-label {
-  font-size: 0.92rem;
-  line-height: 1.2;
-}
-
-.step-main {
   min-width: 0;
+  font-size: 14px;
+  line-height: 1.25;
 }
 
 .step-block {
-  background: var(--bs-body-bg);
+  background: transparent;
 }
 
-.step-hint,
-.form-hint {
-  color: var(--bs-secondary-color);
-  font-size: 0.86rem;
-  margin-bottom: 0.45rem;
+.step-title {
+  margin: 0 0 8px;
+  font-family: var(--app-font-display);
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.19;
+  letter-spacing: -0.022em;
+}
+
+.step-hint {
+  max-width: 62ch;
+  margin: 0 0 28px;
+  color: var(--app-muted);
+  font-family: var(--app-font-text);
+  font-size: 15px;
+  line-height: 1.55;
+  letter-spacing: -0.01em;
+}
+
+.step-block > .form-group,
+.step-block > .shiny-input-container,
+.step-block > .shiny-html-output {
+  margin-bottom: 18px;
 }
 
 .step-footer {
   display: flex;
   justify-content: space-between;
-  gap: 0.75rem;
-  margin-top: 1.25rem;
-  padding-top: 0.85rem;
-  border-top: 1px solid var(--bs-border-color);
+  gap: 12px;
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid var(--app-divider);
 }
 
-.a-preview {
-  position: sticky;
-  top: 1rem;
-  align-self: start;
-  padding: 0.85rem;
-  border: 1px solid var(--bs-border-color);
-  border-radius: var(--mcmctreer-radius);
-  background: var(--bs-tertiary-bg);
+.preview-title {
+  margin: 0 0 14px;
+  font-family: var(--app-font-display);
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 1.19;
+  letter-spacing: -0.012em;
+}
+
+.preview-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 18px;
+}
+
+.preview-controls[inert] {
+  display: none;
+}
+
+.plot-frame {
+  overflow: hidden;
+  border-radius: var(--app-radius-sm);
+  background: var(--app-canvas);
+  box-shadow: var(--app-shadow-product);
+}
+
+[data-bs-theme="dark"] .plot-frame {
+  background: #171719;
+}
+
+.plot-frame .shiny-plot-output,
+.plot-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.plot-caption {
+  margin: 14px 4px 0;
+  color: var(--app-muted);
+  font-family: var(--app-font-text);
+  font-size: 12px;
+  line-height: 1.5;
+  letter-spacing: -0.008em;
+  text-align: center;
+}
+
+/* -------------------------------------------------------------------------
+   Typography helpers and form controls.
+   ------------------------------------------------------------------------- */
+
+.control-label,
+label.control-label {
+  margin-bottom: 7px;
+  color: var(--app-ink);
+  font-family: var(--app-font-text);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.008em;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-hint,
+.step-hint + .form-hint {
+  margin: 6px 0 0;
+  color: var(--app-muted);
+  font-family: var(--app-font-text);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.45;
+  letter-spacing: -0.006em;
+}
+
+.form-control,
+.form-select,
+select.form-control {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--app-radius-md);
+  background-color: var(--app-field);
+  color: var(--app-ink);
+  font-family: var(--app-font-text);
+  font-size: 15px;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  box-shadow: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.form-control:hover,
+.form-select:hover,
+select.form-control:hover {
+  border-color: var(--app-muted);
+}
+
+.form-control:focus,
+.form-select:focus,
+select.form-control:focus {
+  border-color: var(--app-focus);
+  background-color: var(--app-field);
+  color: var(--app-ink);
+  box-shadow: 0 0 0 3px var(--app-focus-ring);
+  outline: none;
+}
+
+.form-control::placeholder {
+  color: var(--app-muted);
+  opacity: 1;
+}
+
+textarea.form-control {
+  min-height: 132px;
+  padding: 12px 14px;
+  border-radius: var(--app-radius-md);
+  resize: vertical;
+}
+
+select.form-control {
+  padding-right: 34px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%236e6e73' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 10px 6px;
+  appearance: none;
+}
+
+/* The caret is a data URI, so it cannot read a custom property and must be
+   restated for dark surfaces: %236e6e73 sits at 2.8:1 on --app-field. */
+[data-bs-theme="dark"] select.form-control {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23a1a1a6' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+/* Shiny's fileInput is legacy Bootstrap-3 markup: the real <input type=file>
+   sits at top:-99999px and the visible control is a .btn-file span styled by
+   Shiny's own sheet at specificity (0,3,0). Match that specificity so the
+   button follows the pearl-capsule grammar instead of rendering near-black. */
+.shiny-input-container .input-group .btn-file {
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid var(--app-hairline) !important;
+  border-right: 0 !important;
+  border-top-left-radius: var(--app-radius-md) !important;
+  border-bottom-left-radius: var(--app-radius-md) !important;
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+  background: var(--app-pearl) !important;
+  color: var(--app-ink) !important;
+  font-family: var(--app-font-text);
+  font-size: 14px;
+  line-height: 42px;
+}
+
+.shiny-input-container .input-group .btn-file:hover {
+  background: var(--app-parchment) !important;
+  color: var(--app-ink) !important;
+}
+
+.shiny-input-container .input-group > .form-control {
+  border-top-right-radius: var(--app-radius-md) !important;
+  border-bottom-right-radius: var(--app-radius-md) !important;
+}
+
+[data-bs-theme="dark"] .shiny-input-container .input-group .btn-file {
+  border-color: var(--app-hairline) !important;
+  background: var(--app-tile-2) !important;
+  color: var(--app-ink) !important;
+}
+
+[data-bs-theme="dark"] .shiny-input-container .input-group .btn-file:hover {
+  background: var(--app-hairline) !important;
+}
+
+select.form-control[multiple] {
+  min-height: 132px;
+  padding: 6px;
+  background-image: none;
+}
+
+select.form-control[multiple] option {
+  padding: 6px 8px;
+  border-radius: var(--app-radius-sm);
+}
+
+input[type="number"].form-control {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Selectize mirrors the native field so every select reads the same. */
+.selectize-control.single .selectize-input,
+.selectize-control.multi .selectize-input {
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--app-radius-md);
+  background: var(--app-field);
+  color: var(--app-ink);
+  font-family: var(--app-font-text);
+  font-size: 15px;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  box-shadow: none;
+}
+
+.selectize-control.single .selectize-input.focus,
+.selectize-control.multi .selectize-input.focus {
+  border-color: var(--app-focus);
+  box-shadow: 0 0 0 3px var(--app-focus-ring);
+}
+
+.selectize-control.single .selectize-input::after {
+  border-color: var(--app-muted) transparent transparent;
+}
+
+.selectize-dropdown {
+  margin-top: 4px;
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--app-radius-md);
+  background: var(--app-card);
+  color: var(--app-ink);
+  font-family: var(--app-font-text);
+  font-size: 14px;
+  box-shadow: none;
+}
+
+.selectize-dropdown .active {
+  background: var(--app-parchment);
+  color: var(--app-ink);
+}
+
+.selectize-dropdown .optgroup-header {
+  color: var(--app-muted);
+}
+
+/* Radio groups are pill chips, matching the configurator grammar. */
+.shiny-options-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px !important;
+}
+
+/* Shiny's inline radio layout reserves a 1.9em input gutter; the pill chips
+   supply their own hit area, so remove it to align with the fields below. */
+.shiny-input-container-inline .shiny-options-group .radio-inline,
+.shiny-input-container-inline .shiny-options-group .checkbox-inline {
+  padding-left: 0 !important;
+}
+
+.shiny-options-group .radio-inline,
+.shiny-options-group .checkbox-inline {
+  display: inline-flex;
+  margin: 0;
+  padding: 0;
+  font-weight: 400;
+}
+
+.shiny-options-group .radio-inline input[type="radio"],
+.shiny-options-group .checkbox-inline input[type="checkbox"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.shiny-options-group .radio-inline span,
+.shiny-options-group .checkbox-inline span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 10px 18px;
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--app-radius-pill);
+  background: var(--app-card);
+  color: var(--app-ink);
+  font-family: var(--app-font-text);
+  font-size: 14px;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: border-color 160ms ease, color 160ms ease,
+    background-color 160ms ease;
+}
+
+.shiny-options-group .radio-inline:hover span,
+.shiny-options-group .checkbox-inline:hover span {
+  border-color: var(--app-muted);
+}
+
+.shiny-options-group .radio-inline input:checked + span,
+.shiny-options-group .checkbox-inline input:checked + span {
+  padding: 9px 17px;
+  border: 2px solid var(--app-focus);
+  color: var(--app-link);
+  background: var(--app-card);
+}
+
+.shiny-options-group .radio-inline input:focus-visible + span,
+.shiny-options-group .checkbox-inline input:focus-visible + span {
+  outline: 2px solid var(--app-focus);
+  outline-offset: 2px;
+}
+
+.checkbox,
+.radio {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.checkbox label,
+.radio label,
+.form-check label {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 28px;
+  padding: 4px 0;
+  color: var(--app-ink);
+  font-family: var(--app-font-text);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: -0.008em;
+  cursor: pointer;
+}
+
+.checkbox input[type="checkbox"],
+.radio input[type="radio"],
+.form-check-input {
+  position: static;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--app-primary);
+  cursor: pointer;
+}
+
+.form-check-input:focus {
+  border-color: var(--app-focus);
+  box-shadow: 0 0 0 3px var(--app-focus-ring);
+}
+
+/* Native file input as one segmented capsule. */
+.shiny-input-container .input-group {
+  display: flex;
+  flex-wrap: nowrap;
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--app-radius-md);
+  background: var(--app-field);
+}
+
+.shiny-input-container .input-group:focus-within {
+  border-color: var(--app-focus);
+  box-shadow: 0 0 0 3px var(--app-focus-ring);
+}
+
+.shiny-input-container .input-group .input-group-btn,
+.shiny-input-container .input-group .input-group-prepend {
+  display: flex;
+  width: auto;
+}
+
+.shiny-input-container .input-group .btn-file {
+  min-height: 44px;
+  margin: 0;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 0;
+  background: var(--app-ink);
+  color: var(--app-canvas);
+  font-family: var(--app-font-text);
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.shiny-input-container .input-group .btn-file:hover {
+  background: var(--app-ink-80);
+  color: var(--app-canvas);
+}
+
+[data-bs-theme="dark"] .shiny-input-container .input-group .btn-file {
+  background: #3a3a3c;
+  color: #f5f5f7;
+}
+
+[data-bs-theme="dark"] .shiny-input-container .input-group .btn-file:hover {
+  background: #48484a;
+  color: #ffffff;
+}
+
+.shiny-input-container .input-group > .form-control {
   min-width: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--app-muted);
+  box-shadow: none;
 }
 
-.a-preview h5 {
-  font-size: 0.95rem;
-  margin-bottom: 0.5rem;
+.shiny-input-container .progress {
+  height: 3px;
+  margin: 7px 0 0;
+  overflow: hidden;
+  border-radius: var(--app-radius-pill);
+  background: transparent;
+  box-shadow: none;
 }
 
-.a-preview .checkbox {
-  margin-bottom: 0.25rem;
+.shiny-input-container .progress-bar {
+  background: var(--app-link);
+  border-radius: var(--app-radius-pill);
+  opacity: 0.35;
+}
+
+.shiny-input-container .shiny-file-input-progress {
+  margin-top: 6px;
+  color: var(--app-muted);
+  font-family: var(--app-font-text);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* -------------------------------------------------------------------------
+   Buttons — pill actions, ghost pills and pearl capsules.
+   ------------------------------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 11px 22px;
+  border-radius: var(--app-radius-pill);
+  font-family: var(--app-font-text);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  box-shadow: none !important;
+  transition: background-color 160ms ease, border-color 160ms ease,
+    color 160ms ease, transform 120ms ease;
+}
+
+.btn:hover,
+.btn:focus {
+  text-decoration: none;
+}
+
+.btn:active {
+  transform: scale(0.95);
+}
+
+.btn-sm {
+  min-height: 36px;
+  padding: 8px 16px;
+  font-size: 14px;
+}
+
+.btn-primary {
+  border: 1px solid var(--app-primary);
+  background: var(--app-primary);
+  color: var(--app-on-primary);
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:not(:disabled):not(.disabled):active {
+  border-color: var(--app-primary-hover);
+  background: var(--app-primary-hover);
+  color: var(--app-on-primary);
+}
+
+.btn-outline-primary {
+  border: 1px solid var(--app-primary);
+  background: transparent;
+  color: var(--app-link);
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus {
+  border-color: var(--app-primary);
+  background: rgba(0, 102, 204, 0.08);
+  color: var(--app-link);
+}
+
+[data-bs-theme="dark"] .btn-outline-primary {
+  border-color: var(--app-link);
+  color: var(--app-link);
+}
+
+[data-bs-theme="dark"] .btn-outline-primary:hover {
+  background: rgba(41, 151, 255, 0.12);
+}
+
+.btn-default,
+.btn-outline-secondary,
+.btn-secondary {
+  padding: 8px 20px;
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--app-radius-md);
+  background: var(--app-pearl);
+  color: var(--app-ink-80);
+}
+
+.btn-default:hover,
+.btn-outline-secondary:hover,
+.btn-secondary:hover,
+.btn-default:focus,
+.btn-outline-secondary:focus,
+.btn-secondary:focus {
+  border-color: var(--app-hairline);
+  background: var(--app-canvas);
+  color: var(--app-ink);
+}
+
+.btn-outline-danger {
+  border: 2px solid var(--app-danger);
+  background: transparent;
+  color: var(--app-danger);
+}
+
+.btn-outline-danger:hover,
+.btn-outline-danger:focus {
+  border-color: var(--app-danger);
+  background: var(--app-danger-bg);
+  color: var(--app-danger);
+}
+
+.btn-danger {
+  border: 1px solid var(--app-danger);
+  background: var(--app-danger);
+  color: var(--app-on-primary);
+}
+
+[data-bs-theme="dark"] .btn-danger {
+  color: #1d1d1f;
+}
+
+/* Shiny adds .btn-default to action buttons, so compound classes need to
+   restate the primary/ghost grammar after the pearl capsule rules. */
+.btn-default.btn-primary {
+  padding: 11px 22px;
+  border: 1px solid var(--app-primary);
+  border-radius: var(--app-radius-pill);
+  background: var(--app-primary);
+  color: var(--app-on-primary);
+}
+
+.btn-default.btn-primary:hover,
+.btn-default.btn-primary:focus {
+  border-color: var(--app-primary-hover);
+  background: var(--app-primary-hover);
+  color: var(--app-on-primary);
+}
+
+.btn-default.btn-outline-primary {
+  padding: 11px 22px;
+  border: 1px solid var(--app-primary);
+  border-radius: var(--app-radius-pill);
+  background: transparent;
+  color: var(--app-link);
+}
+
+.btn-default.btn-outline-primary:hover,
+.btn-default.btn-outline-primary:focus {
+  border-color: var(--app-primary);
+  background: rgba(0, 102, 204, 0.08);
+  color: var(--app-link);
+}
+
+[data-bs-theme="dark"] .btn-default.btn-outline-primary {
+  border-color: var(--app-link);
+  color: var(--app-link);
+}
+
+[data-bs-theme="dark"] .btn-default.btn-outline-primary:hover {
+  background: rgba(41, 151, 255, 0.12);
+}
+
+.btn-default.btn-sm {
+  min-height: 36px;
+  padding: 8px 16px;
+  font-size: 14px;
+  border-radius: var(--app-radius-pill);
+}
+
+.btn:disabled,
+.btn.disabled,
+.btn-primary:disabled,
+.btn-primary.disabled {
+  opacity: 1;
+  border-color: var(--app-divider) !important;
+  background: var(--app-pearl) !important;
+  color: var(--app-muted) !important;
+  transform: none;
+  cursor: not-allowed;
+}
+
+/* The step rail also carries .btn, so restate its left-aligned layout with
+   enough specificity to keep every index on the same vertical line. */
+.btn.step-btn {
+  justify-content: flex-start;
+  width: 100%;
+  min-height: 44px;
+  padding: 9px 14px 9px 10px;
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--app-radius-pill);
+  background: var(--app-card);
+  color: var(--app-ink);
+  font-size: 14px;
+  font-weight: 400;
+  text-align: left;
+  box-shadow: none;
+}
+
+.btn.step-btn:hover:not(:disabled):not([aria-disabled="true"]) {
+  border-color: var(--app-muted);
+  background: var(--app-pearl);
+  text-decoration: none;
+}
+
+.btn.step-btn.active {
+  padding: 8px 13px 8px 9px;
+  border: 2px solid var(--app-focus);
+  background: var(--app-card);
+  color: var(--app-link);
+  font-weight: 600;
+}
+
+.btn.step-btn.active:hover:not(:disabled) {
+  background: var(--app-pearl);
+}
+
+.btn.step-btn.done {
+  border-color: var(--app-hairline);
+}
+
+.btn.step-btn.locked {
+  border-style: dashed;
+  background: var(--app-parchment);
+  color: var(--app-muted);
+  cursor: not-allowed;
+}
+
+.btn.step-btn.locked:hover {
+  background: var(--app-parchment);
+}
+
+.btn.step-btn.locked:focus-visible {
+  outline: 2px solid var(--app-focus);
+  outline-offset: 2px;
+}
+
+/* Step 1's primary action, kept adjacent to the field it acts on. */
+.step-action {
+  display: flex;
+  margin-top: 18px;
+}
+
+/* -------------------------------------------------------------------------
+   Feedback, tables, cards and code.
+   ------------------------------------------------------------------------- */
+
+.alert,
+.app-alert {
+  position: relative;
+  margin: 16px 0;
+  padding: 16px 20px 16px 44px;
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--app-radius-lg);
+  background: var(--app-card);
+  color: var(--app-ink);
+  font-family: var(--app-font-text);
+  font-size: 14px;
+  line-height: 1.55;
+  letter-spacing: -0.008em;
+  box-shadow: none;
+}
+
+.alert::before {
+  content: "";
+  position: absolute;
+  top: 22px;
+  left: 20px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--app-link);
+}
+
+.alert-success {
+  border-color: var(--app-success-border);
+  background: var(--app-success-bg);
+}
+
+.alert-success::before {
+  background: var(--app-success);
+}
+
+.alert-danger {
+  border-color: var(--app-danger-border);
+  background: var(--app-danger-bg);
+}
+
+.alert-danger::before {
+  background: var(--app-danger);
+}
+
+.alert-warning {
+  border-color: var(--app-warning-border);
+  background: var(--app-warning-bg);
+}
+
+.alert-warning::before {
+  background: var(--app-warning);
+}
+
+.alert-info {
+  border-color: var(--app-hairline);
+  background: var(--app-parchment);
+}
+
+.alert strong {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--app-ink);
+  font-weight: 600;
+}
+
+.alert p:last-child,
+.alert ul:last-child,
+.alert dl:last-child {
+  margin-bottom: 0;
+}
+
+.alert ul {
+  margin: 4px 0 0;
+  padding-left: 18px;
+}
+
+.status-ok,
+.status-bad,
+.plot-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--app-font-text);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -0.008em;
+}
+
+.status-ok {
+  color: var(--app-success);
+}
+
+.status-bad {
+  color: var(--app-danger);
+}
+
+.plot-status {
+  display: block;
+  color: var(--app-muted);
+  font-weight: 400;
+}
+
+.plot-status p {
+  margin: 0;
+}
+
+.empty-state {
+  padding: 24px 0;
+  color: var(--app-muted);
+  font-size: 14px;
+}
+
+.table {
+  --bs-table-bg: transparent;
+  --bs-table-color: var(--app-ink);
+  margin-bottom: 16px;
+  color: var(--app-ink);
+  font-family: var(--app-font-text);
+  font-size: 14px;
+  border-color: var(--app-divider);
+}
+
+.table > :not(caption) > * > * {
+  padding: 9px 12px;
+  border-bottom-color: var(--app-divider);
+  background: transparent;
+}
+
+.table thead th {
+  color: var(--app-muted);
+  font-family: var(--app-font-text);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.parameter-table,
+.summary-table {
+  font-size: 13px;
+}
+
+.parameter-table {
+  max-width: 520px;
+  table-layout: fixed;
+}
+
+.parameter-table th:first-child,
+.parameter-table td:first-child {
+  width: 50%;
+}
+
+.parameter-table th:last-child,
+.parameter-table td:last-child {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 
 .tree-report {
   display: grid;
-  grid-template-columns: max-content 1fr;
-  gap: 0.2rem 0.75rem;
-  margin-bottom: 0.4rem;
-  font-size: 0.9rem;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 4px 16px;
+  margin: 8px 0 0;
+  font-size: 13px;
 }
 
 .tree-report dt {
+  color: var(--app-muted);
   font-weight: 600;
 }
 
 .tree-report dd {
-  margin-bottom: 0;
+  margin: 0;
 }
 
 .tree-warnings {
-  margin-bottom: 0;
-  font-size: 0.86rem;
+  margin: 8px 0 0;
+  padding-left: 18px;
+  color: var(--app-muted);
+  font-size: 13px;
+}
+
+.tree-warnings li::marker {
+  color: var(--app-warning);
+}
+
+.code-block {
+  max-height: 360px;
+  overflow: auto;
+  margin: 12px 0;
+  padding: 14px 16px;
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--app-radius-md);
+  background: var(--app-parchment);
+  color: var(--app-ink);
+  font-family: var(--app-font-code);
+  font-size: 13px;
+  line-height: 1.7;
+  letter-spacing: 0;
+  white-space: pre;
+}
+
+.tre-preview {
+  max-height: 280px;
+  white-space: pre;
+  overflow-x: auto;
+  overflow-wrap: normal;
 }
 
 .node-tip-list {
-  margin-top: 1rem;
+  margin-top: 24px;
+}
+
+.node-tip-list > h3,
+.node-tip-list > h5,
+.result-card h4,
+.result-card h5,
+.step-block > h3,
+.step-block > h5 {
+  margin: 0 0 10px;
+  font-family: var(--app-font-text);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.016em;
 }
 
 .node-tip-card,
 .result-card,
 .adv-card {
-  border: 1px solid var(--bs-border-color);
-  border-radius: var(--mcmctreer-radius);
-  padding: 0.75rem 0.85rem;
-  margin-bottom: 0.75rem;
-  background: var(--bs-tertiary-bg);
+  margin-bottom: 14px;
+  padding: 20px 22px;
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--app-radius-lg);
+  background: var(--app-pearl);
+}
+
+.adv-card,
+.result-card {
+  background: var(--app-card);
 }
 
 .node-tip-count,
-.result-tips {
-  color: var(--bs-secondary-color);
-  font-size: 0.84rem;
+.result-tips,
+.calib-tip-count {
+  color: var(--app-muted);
+  font-size: 12px;
 }
 
 .node-tip-text {
-  margin: 0.25rem 0 0;
-  font-family: var(--bs-font-monospace);
-  font-size: 0.82rem;
+  margin: 8px 0 0;
+  color: var(--app-muted);
+  font-family: var(--app-font-text);
+  font-size: 13px;
+  line-height: 1.6;
   overflow-wrap: anywhere;
 }
 
-.calib-table {
-  border: 1px solid var(--bs-border-color);
-  border-radius: var(--mcmctreer-radius);
+.adv-card-head {
+  margin-bottom: 16px;
+}
+
+.adv-card-head h4,
+.adv-card-head h5 {
+  margin: 0 0 4px;
+  font-family: var(--app-font-text);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.016em;
+}
+
+/* The card is now a native <details>, so the header doubles as the toggle. */
+details.adv-card {
+  padding: 0;
   overflow: hidden;
+}
+
+details.adv-card > .adv-card-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 0;
+  padding: 18px 48px 18px 22px;
+  cursor: pointer;
+  list-style: none;
+}
+
+details.adv-card > .adv-card-head::-webkit-details-marker {
+  display: none;
+}
+
+details.adv-card > .adv-card-head::after {
+  content: "";
+  position: absolute;
+  top: 24px;
+  right: 22px;
+  width: 9px;
+  height: 9px;
+  border-right: 1.5px solid var(--app-muted);
+  border-bottom: 1.5px solid var(--app-muted);
+  transform: translateY(-60%) rotate(45deg);
+  transition: transform 160ms ease;
+}
+
+details.adv-card[open] > .adv-card-head {
+  border-bottom: 1px solid var(--app-divider);
+}
+
+details.adv-card[open] > .adv-card-head::after {
+  transform: translateY(20%) rotate(225deg);
+}
+
+details.adv-card > .adv-card-head:hover {
+  background: var(--app-parchment);
+}
+
+details.adv-card > .adv-grid,
+details.adv-card > .form-hint {
+  margin-left: 22px;
+  margin-right: 22px;
+}
+
+details.adv-card > .adv-grid {
+  margin-top: 18px;
+  margin-bottom: 20px;
+}
+
+.adv-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 20px;
+}
+
+.adv-field .form-group,
+.adv-field .shiny-input-container {
+  margin-bottom: 0;
+}
+
+.adv-field .form-hint {
+  margin-top: 5px;
+  font-size: 12px;
+}
+
+.result-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.result-head h5 {
+  margin: 0;
+}
+
+.calib-table {
+  overflow: hidden;
+  margin: 16px 0;
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--app-radius-lg);
+  background: var(--app-card);
 }
 
 .calib-header,
 .calib-row {
   display: grid;
-  grid-template-columns: 0.7fr 1.1fr 1fr 1fr 0.9fr;
-  gap: 0.5rem;
+  grid-template-columns: 0.65fr 1.2fr 1fr 1fr 1.05fr;
+  gap: 12px;
   align-items: center;
-  padding: 0.45rem 0.6rem;
+  padding: 12px 16px;
 }
 
 .calib-header {
-  background: var(--bs-secondary-bg);
-  border-bottom: 1px solid var(--bs-border-color);
-  font-size: 0.82rem;
-  font-weight: 650;
+  border-bottom: 1px solid var(--app-hairline);
+  background: var(--app-parchment);
+  color: var(--app-muted);
+  font-family: var(--app-font-text);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.calib-row {
+  padding: 16px;
 }
 
 .calib-row + .calib-row {
-  border-top: 1px solid var(--bs-border-color);
+  border-top: 1px solid var(--app-divider);
 }
 
 .calib-node {
   display: flex;
   flex-direction: column;
-  gap: 0.1rem;
+  gap: 2px;
 }
 
-.calib-tip-count {
-  color: var(--bs-secondary-color);
+.calib-node strong {
+  font-family: var(--app-font-text);
+  font-size: 15px;
+  font-weight: 600;
 }
 
 .calib-table .form-group,
@@ -251,193 +1789,1001 @@ body {
   margin-bottom: 0;
 }
 
+.calib-table .form-control {
+  min-height: 40px;
+  padding: 8px 10px;
+  font-size: 14px;
+}
+
 .calib-field.is-disabled {
-  opacity: 0.5;
+  opacity: 0.45;
 }
 
 .calib-field[inert] {
   pointer-events: none;
 }
 
-.status-ok {
-  color: var(--bs-success-text-emphasis);
-  font-size: 0.84rem;
-}
-
-.status-bad {
-  color: var(--bs-danger-text-emphasis);
-  font-size: 0.84rem;
-}
-
-.adv-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.65rem 0.85rem;
-}
-
-.adv-field .form-group,
-.adv-field .shiny-input-container {
-  margin-bottom: 0.2rem;
-}
-
-.adv-field .form-hint {
-  margin-bottom: 0.15rem;
-}
-
-.result-card .parameter-table {
-  margin-bottom: 0.35rem;
-  font-size: 0.86rem;
-}
-
-.result-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 0.5rem;
-  margin-bottom: 0.35rem;
-}
-
-.result-head h5 {
-  font-size: 0.95rem;
-  margin-bottom: 0;
-}
-
 .export-actions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.6rem;
-  margin: 0.75rem 0;
+  gap: 12px;
+  margin: 18px 0;
 }
 
-.code-block {
-  background: var(--bs-tertiary-bg);
-  color: var(--bs-body-color);
-  border: 1px solid var(--bs-border-color);
-  border-radius: 0.45rem;
-  padding: 0.65rem 0.75rem;
-  font-family: var(--bs-font-monospace);
-  font-size: 0.8rem;
-  max-height: 360px;
-  overflow: auto;
-  white-space: pre;
+.export-actions .form-hint {
+  flex-basis: 100%;
+  margin-top: 0;
 }
 
-.tre-preview {
-  max-height: 280px;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
+.export-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 20px;
+  margin: 8px 0 4px;
+}
+
+.export-grid .form-group,
+.export-grid .shiny-input-container {
+  margin: 0;
 }
 
 .copy-row {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.65rem;
+  gap: 14px;
 }
 
-.summary-table {
-  font-size: 0.86rem;
-}
+/* -------------------------------------------------------------------------
+   Time tree viewer — settings sidebar, frosted toolbar and staged plot.
+   ------------------------------------------------------------------------- */
 
-.empty-state {
-  color: var(--bs-secondary-color);
-  padding: 1rem 0;
-}
-
-.b-main {
+.b-workbench {
   min-width: 0;
-  padding: 0.25rem 0.5rem 1rem;
+}
+
+.b-workbench .bslib-sidebar-layout {
+  background: transparent;
+  gap: 20px;
+}
+
+/* bslib gives its sidebar a chrome of its own through
+   `.bslib-sidebar-layout > .sidebar` (specificity 0,2,0, in a sheet that loads
+   after this one): a translucent fill, a right-hand hairline, and square right
+   corners. That frame made the rail a square box holding rounded cards. The rail
+   is now a bare stack of accordion cards on the canvas, so strip the chrome
+   rather than trying to round it. */
+.b-workbench .bslib-sidebar-layout > .b-sidebar {
+  overflow: hidden;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.b-sidebar > .sidebar-content {
+  padding: 0;
+  /* The rail only ever needs to scroll vertically. With overflow-x: auto a
+     horizontal bar appeared at the foot of the panel, right under the status
+     alert. */
+  overflow-x: hidden;
+}
+
+.b-sidebar-inner {
+  padding: 0;
+}
+
+.b-accordion.accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  --bs-accordion-bg: transparent;
+  --bs-accordion-border-color: transparent;
+  --bs-accordion-btn-focus-box-shadow: none;
+}
+
+.b-accordion .accordion-item {
+  overflow: hidden;
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--app-radius-md);
+  background: var(--app-card);
+}
+
+.b-accordion .accordion-header {
+  margin: 0;
+}
+
+.b-accordion .accordion-button {
+  min-height: 48px;
+  padding: 13px 16px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--app-ink);
+  font-family: var(--app-font-text);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  box-shadow: none;
+}
+
+.b-accordion .accordion-button:hover {
+  background: var(--app-pearl);
+}
+
+.b-accordion .accordion-button:not(.collapsed) {
+  background: var(--app-parchment);
+  color: var(--app-ink);
+  box-shadow: none;
+}
+
+.b-accordion .accordion-button::after {
+  width: 12px;
+  height: 12px;
+  background-size: 12px;
+  filter: none;
+  opacity: 0.6;
+}
+
+.b-accordion .accordion-icon {
+  color: var(--app-link);
+}
+
+.b-accordion .accordion-body {
+  padding: 16px;
+  border-top: 1px solid var(--app-divider);
+  background: var(--app-card);
+}
+
+.b-accordion .form-group,
+.b-accordion .shiny-input-container {
+  margin-bottom: 14px;
+}
+
+.b-accordion .form-group:last-child,
+.b-accordion .shiny-input-container:last-child {
+  margin-bottom: 0;
+}
+
+.b-accordion .form-hint {
+  margin-top: 5px;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.b-accordion .shiny-options-group {
+  gap: 6px;
+}
+
+.b-accordion .radio-inline span,
+.b-accordion .checkbox-inline span {
+  padding-left: 14px;
+  padding-right: 14px;
+  font-size: 13px;
+}
+
+.b-accordion .form-control {
+  min-height: 40px;
+  padding: 8px 12px;
+  font-size: 14px;
+}
+
+.b-accordion select.form-control[multiple] {
+  min-height: 118px;
+}
+
+.b-accordion .selectize-control.single .selectize-input {
+  min-height: 40px;
+  padding: 8px 12px;
+  font-size: 14px;
+}
+
+.b-stage {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--app-radius-lg);
+  background: var(--app-card);
+}
+
+/* Not sticky. .b-stage clips, which makes it the toolbar's scroll container, so
+   a `top` offset pulled the bar down over the canvas even at scrollTop 0 and
+   hid the top edge and upper corners of the figure card. The stage is a bounded
+   flex column, so the bar holds the first row on its own. */
+.b-toolbar-wrap {
+  flex: 0 0 auto;
+  border-bottom: 1px solid var(--app-divider);
+  background: var(--app-frosted);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
 }
 
 .b-toolbar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 0.5rem;
+  gap: 10px 18px;
+  min-height: 64px;
+  margin: 0;
+  padding: 12px 24px;
 }
 
 .b-toolbar .form-group,
 .b-toolbar .shiny-input-container {
-  margin-bottom: 0;
+  width: auto !important;
+  flex: 0 0 auto;
+  margin: 0;
 }
 
 .b-toolbar .form-hint {
-  margin-bottom: 0;
+  margin: 0;
+  font-size: 12px;
 }
 
-.plot-status {
-  color: var(--bs-success-text-emphasis);
-  font-size: 0.85rem;
-}
-
-.app-alert {
-  margin-top: 0.65rem;
-  margin-bottom: 0.65rem;
-}
-
-.app-alert ul {
-  margin-bottom: 0;
-}
-
-.app-footer {
-  border-top: 1px solid var(--bs-border-color);
-  padding: 0.65rem 1rem 0.85rem;
-  font-size: 0.78rem;
-  color: var(--bs-secondary-color);
-  background: var(--bs-body-bg);
-}
-
-.footer-line {
-  display: flex;
-  flex-wrap: wrap;
+.b-toolbar .checkbox {
+  display: inline-flex;
   align-items: center;
-  gap: 0.55rem;
-  margin-bottom: 0.2rem;
 }
 
-.footer-sep {
-  color: var(--bs-border-color);
-}
-
-.footer-link {
-  color: var(--bs-link-color);
-  text-decoration: none;
-}
-
-.footer-link:hover,
-.footer-link:focus-visible {
-  text-decoration: underline;
-}
-
-.footer-muted {
-  color: var(--bs-secondary-color);
-}
-
-.about-list {
+.b-plot-wrap {
   display: grid;
-  grid-template-columns: max-content 1fr;
-  gap: 0.25rem 0.85rem;
+  grid-template-rows: minmax(0, 1fr);
+  padding: 20px 32px 24px;
 }
 
-.about-list dt {
+/* The canvas frame lives on the wrapper rather than the output so the empty
+   state can be a different object: a rendered figure is a sheet of paper, and
+   a placeholder is a well waiting for input. Auto margins centre a figure that
+   is shorter than the stage and collapse to zero when it is taller, which a
+   centred alignment would instead clip at the top. */
+.b-canvas {
+  margin-block: auto;
+  overflow: hidden;
+  border-radius: var(--app-radius-sm);
+  background: var(--app-canvas);
+  box-shadow: var(--app-shadow-product);
+}
+
+.b-canvas.is-empty {
+  border: 1px dashed var(--app-hairline);
+  background: var(--app-parchment);
+  box-shadow: none;
+}
+
+.b-plot-wrap .shiny-plot-output {
+  height: auto !important;
+}
+
+.b-plot-wrap .shiny-plot-output img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+[data-bs-theme="dark"] .b-canvas {
+  background: #171719;
+}
+
+[data-bs-theme="dark"] .b-canvas.is-empty {
+  border-color: #3a3a3c;
+  background: #121214;
+}
+
+/* Desktop: the settings rail is far taller than the figure, so it must scroll
+   on its own. Without a bounded height the whole page grows past 3600px and
+   the plot scrolls out of view while the user is still editing. */
+@media (min-width: 992px) {
+  .b-workbench .bslib-sidebar-layout {
+    height: calc(100vh - 68px);
+    min-height: 480px;
+  }
+
+  .b-workbench .bslib-sidebar-layout > .sidebar,
+  .b-workbench .bslib-sidebar-layout > .main {
+    height: 100%;
+    min-height: 0;
+  }
+
+  .b-sidebar > .sidebar-content {
+    height: 100%;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--app-hairline) transparent;
+  }
+
+  .b-sidebar > .sidebar-content::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .b-sidebar > .sidebar-content::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background: var(--app-hairline);
+  }
+
+  .b-stage {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .b-plot-wrap {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+  }
+
+  .b-status-wrap {
+    flex: 0 0 auto;
+  }
+}
+
+.b-status-wrap {
+  padding: 20px 32px 0;
+}
+
+.b-status-wrap .alert {
+  margin: 0;
+}
+
+/* The settings rail is always shown at its full width, so bslib's collapse
+   toggle has no useful job here: collapsing it left a 0px column with a
+   floating button half over the card edge. app.js also removes the node so it
+   cannot be tabbed to. */
+.bslib-sidebar-layout button.collapse-toggle {
+  display: none !important;
+}
+
+/* -------------------------------------------------------------------------
+   Calibration feedback states and the step-3 summary.
+   ------------------------------------------------------------------------- */
+
+.status-pending {
+  color: var(--app-muted);
+  font-size: 12px;
   font-weight: 600;
 }
 
-.about-list dd {
+.app-alert .alert-title {
+  margin: 0 0 8px;
+  font-family: var(--app-font-display);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.calib-more {
+  margin-top: 8px;
+}
+
+.calib-more summary {
+  display: inline-block;
+  padding: 4px 0;
+  color: var(--app-link);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.calib-more summary:hover {
+  text-decoration: underline;
+}
+
+.calib-more ul {
+  margin: 8px 0 0;
+}
+
+/* -------------------------------------------------------------------------
+   About page — the project metadata, resources and citation in one place.
+   ------------------------------------------------------------------------- */
+
+.about-workbench {
+  padding-top: 32px;
+  padding-bottom: 80px;
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.about-card {
+  padding: 36px 40px;
+}
+
+.about-card--main {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 10px 40px;
+  align-items: start;
+}
+
+.about-card--main .about-card-title {
+  grid-column: 1 / -1;
+  margin-bottom: 8px;
+}
+
+.about-card--main .about-body {
+  grid-column: 1;
   margin-bottom: 0;
 }
 
-:focus-visible {
-  outline: 2px solid var(--bs-primary);
-  outline-offset: 2px;
+.about-card--main .about-dl {
+  grid-column: 2;
 }
 
-@media (max-width: 991.98px) {
+.about-card--main .about-note {
+  grid-column: 1 / -1;
+  margin-top: 26px;
+}
+
+.about-card-title {
+  margin: 0 0 14px;
+  font-family: var(--app-font-display);
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.022em;
+}
+
+.about-body {
+  margin: 0 0 26px;
+  color: var(--app-muted);
+  font-family: var(--app-font-text);
+  font-size: 15px;
+  line-height: 1.65;
+  letter-spacing: -0.008em;
+}
+
+.about-dl {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  gap: 12px 20px;
+  margin: 0;
+  color: var(--app-ink);
+  font-family: var(--app-font-text);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.about-dl dt {
+  color: var(--app-muted);
+  font-weight: 600;
+}
+
+.about-dl dd {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.about-note {
+  margin: 26px 0 0;
+  padding-top: 20px;
+  border-top: 1px solid var(--app-divider);
+  color: var(--app-muted);
+  font-family: var(--app-font-text);
+  font-size: 12px;
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+}
+
+.about-side {
+  display: grid;
+  grid-template-columns: minmax(300px, 0.75fr) minmax(0, 1.25fr);
+  gap: 20px;
+  align-items: stretch;
+}
+
+.about-side .about-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.about-side .about-note {
+  margin-top: auto;
+}
+
+.about-links {
+  display: flex;
+  flex-direction: column;
+}
+
+.about-link {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  border-bottom: 1px solid var(--app-divider);
+  color: var(--app-link);
+  font-family: var(--app-font-text);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: -0.008em;
+  text-decoration: none;
+}
+
+.about-link:last-child {
+  border-bottom: 0;
+}
+
+.about-link:hover,
+.about-link:focus {
+  color: var(--app-link);
+  text-decoration: underline;
+}
+
+.about-subtitle {
+  margin: 24px 0 8px;
+  color: var(--app-ink);
+  font-family: var(--app-font-text);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.about-card .code-block {
+  max-height: none;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 12px;
+}
+
+/* -------------------------------------------------------------------------
+   Notifications — frosted panels that never sit on top of the product image.
+   ------------------------------------------------------------------------- */
+
+#shiny-notification-panel {
+  position: fixed !important;
+  inset: 60px 24px auto auto !important;
+  width: 340px !important;
+  max-width: calc(100vw - 40px);
+  max-height: 60vh;
+  /* Declaring only overflow-y would compute overflow-x to `auto`, so a toast
+     one pixel too wide grew its own horizontal scrollbar. */
+  overflow-x: hidden;
+  overflow-y: auto;
+  z-index: 100 !important;
+}
+
+/* bslib declares these with doubled selectors (.shiny-notification.shiny-notification,
+   #shiny-notification-panel#shiny-notification-panel), so a single-class rule loses
+   to it no matter where it appears in the cascade. Match that specificity here or
+   bslib's 2rem padding + 1.5rem margin silently survive and overflow the panel. */
+.shiny-notification.shiny-notification {
+  position: relative;
+  width: 100%;
+  margin: 0 0 10px;
+  padding: 14px 42px 14px 34px;
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--app-radius-lg);
+  background: var(--app-frosted);
+  color: var(--app-ink);
+  font-family: var(--app-font-text);
+  font-size: 13px;
+  line-height: 1.5;
+  letter-spacing: -0.008em;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.14);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+}
+
+.shiny-notification::before {
+  content: "";
+  position: absolute;
+  top: 20px;
+  left: 18px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--app-link);
+}
+
+.shiny-notification.shiny-notification-error {
+  border-color: var(--app-danger-border);
+  background: var(--app-danger-bg);
+}
+
+.shiny-notification-error::before {
+  background: var(--app-danger);
+}
+
+.shiny-notification.shiny-notification-warning {
+  border-color: var(--app-warning-border);
+  background: var(--app-warning-bg);
+}
+
+.shiny-notification-warning::before {
+  background: var(--app-warning);
+}
+
+.shiny-notification-content {
+  margin-left: 4px;
+}
+
+.shiny-notification-title {
+  margin-bottom: 2px;
+  color: var(--app-ink);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.shiny-notification.shiny-notification .shiny-notification-close {
+  position: absolute;
+  top: 9px;
+  right: 10px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  color: var(--app-muted);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.shiny-notification.shiny-notification .shiny-notification-close:hover {
+  background: var(--app-parchment);
+  color: var(--app-ink);
+}
+
+/* -------------------------------------------------------------------------
+   Modals and overlays.
+   ------------------------------------------------------------------------- */
+
+.modal-content {
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--app-radius-lg);
+  background: var(--app-card);
+  color: var(--app-ink);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.18);
+}
+
+.modal-header,
+.modal-footer {
+  padding: 24px 28px;
+  border: 0;
+}
+
+.modal-header {
+  padding-bottom: 8px;
+}
+
+.modal-title {
+  font-family: var(--app-font-display);
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+}
+
+.modal-body {
+  padding: 8px 28px;
+  color: var(--app-ink);
+  font-family: var(--app-font-text);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.modal-muted {
+  margin: 12px 0 0;
+  color: var(--app-muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.modal-footer {
+  padding-top: 12px;
+}
+
+.modal-backdrop.show {
+  opacity: 0.36;
+}
+
+.btn-close {
+  opacity: 0.5;
+}
+
+.btn-close:hover {
+  opacity: 0.9;
+}
+
+/* -------------------------------------------------------------------------
+   Desktop workspace lock: the hero scrolls away, then the three Priors
+   columns fill the viewport below the persistent nav and stay put. Long step
+   content scrolls inside the centre card; the step footer stays visible.
+   ------------------------------------------------------------------------- */
+
+@media (min-width: 1280px) {
+  .workbench-grid.is-final-step {
+    grid-template-columns: 244px minmax(0, 1fr);
+  }
+
+  .workbench-grid.is-final-step .a-preview {
+    display: none;
+  }
+
+  .hero--compact {
+    height: 112px;
+    margin-top: -1px;
+    padding: 0;
+  }
+
+  .hero--compact .hero-inner {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    align-items: center;
+    column-gap: 48px;
+    max-width: 1440px;
+    height: 100%;
+    padding: 0 32px;
+    text-align: left;
+  }
+
+  .hero--compact .hero-eyebrow {
+    grid-column: 1;
+    grid-row: 1;
+    justify-content: flex-start;
+    margin: 0 0 6px;
+  }
+
+  .hero--compact .hero-title {
+    grid-column: 1;
+    grid-row: 2;
+    margin: 0;
+    font-size: 28px;
+  }
+
+  .hero--compact .hero-lead {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    justify-self: end;
+    max-width: 720px;
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.5;
+    text-align: right;
+    text-wrap: pretty;
+  }
+
+  .hero--compact .hero-meta {
+    display: none;
+  }
+
+  .workbench--priors {
+    position: sticky;
+    top: 44px;
+    z-index: 1;
+    height: calc(100vh - 156px);
+    min-height: 520px;
+    padding: 16px 0;
+    background: var(--app-parchment);
+  }
+
+  .workbench--priors .workbench-inner,
+  .workbench--priors .workbench-grid {
+    height: 100%;
+  }
+
+  .workbench--priors .workbench-grid {
+    align-items: stretch;
+  }
+
+  .workbench--priors .step-nav,
+  .workbench--priors .step-main,
+  .workbench--priors .a-preview {
+    position: static;
+    align-self: stretch;
+    height: 100%;
+    min-height: 0;
+  }
+
+  .workbench--priors .step-nav,
+  .workbench--priors .a-preview {
+    overflow-y: auto;
+  }
+
+  .workbench--priors .step-main {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .workbench--priors .step-main .step-block {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    padding-right: 6px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--app-hairline) transparent;
+  }
+
+  .workbench--priors .step-main .step-block::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .workbench--priors .step-main .step-block::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background: var(--app-hairline);
+  }
+
+  .workbench--priors .step-main .step-footer {
+    flex: 0 0 auto;
+  }
+}
+
+/* -------------------------------------------------------------------------
+   Responsive rhythm.
+   ------------------------------------------------------------------------- */
+
+@media (max-width: 1279.98px) {
+  .hero {
+    padding: 56px 0 48px;
+  }
+
+  .hero-title {
+    font-size: 34px;
+  }
+
+  .hero-lead {
+    font-size: 19px;
+  }
+
+  .workbench-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
   .step-nav,
   .a-preview {
     position: static;
+  }
+
+  .step-nav {
+    padding: 16px;
+  }
+
+  .rail-title {
+    margin-bottom: 10px;
+    padding: 0 2px;
+  }
+
+  .step-list {
+    flex-direction: row;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .step-list::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* The rail scrolls sideways with no visible bar, so fade the last column of
+     steps to signal that more of them exist off-screen. */
+  .step-list {
+    -webkit-mask-image: linear-gradient(
+      90deg,
+      #000 0,
+      #000 calc(100% - 34px),
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      90deg,
+      #000 0,
+      #000 calc(100% - 34px),
+      transparent 100%
+    );
+  }
+
+  .step-btn {
+    flex: 0 0 auto;
+    width: auto;
+    scroll-snap-align: center;
+  }
+
+  .btn.step-btn {
+    flex: 0 0 auto;
+    width: auto;
+  }
+
+  .step-label {
+    white-space: nowrap;
+  }
+
+  .workbench-grid.is-final-step .a-preview {
+    display: none;
+  }
+
+  .step-main {
+    padding: 28px 24px;
+  }
+
+  .b-plot-wrap {
+    padding: 16px 20px 20px;
+  }
+
+  .b-status-wrap {
+    padding: 20px 20px 0;
+  }
+}
+
+/* Below tablet landscape the viewer becomes a single stack: settings first,
+   then a full-width plot stage. */
+@media (max-width: 991.98px) {
+  .b-workbench .bslib-sidebar-layout {
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-template-rows: auto auto !important;
+    gap: 16px !important;
+  }
+
+  .b-workbench .bslib-sidebar-layout > .sidebar {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  .b-workbench .bslib-sidebar-layout > .main {
+    grid-column: 1 !important;
+    grid-row: 2 !important;
+    width: 100% !important;
+  }
+
+  .b-sidebar-inner {
+    /* bslib's .bslib-gap-spacing sets align-items: start, which shrink-wraps
+       the rail to its widest label on phones. Take the full column back. */
+    width: 100%;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .b-workbench .bslib-sidebar-layout {
+    position: relative;
+  }
+
+  .about-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .about-card--main {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .about-card--main .about-body,
+  .about-card--main .about-dl,
+  .about-card--main .about-note {
+    grid-column: 1;
+  }
+
+  .about-side {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .about-card {
+    padding: 28px 24px;
+  }
+}
+
+/* Below tablet landscape the viewer becomes a single stack: the plot stage
+   first, then the settings, because the figure is the module's output. */
+@media (max-width: 991.98px) {
+  .b-workbench .bslib-sidebar-layout > .main {
+    grid-row: 1 !important;
+  }
+
+  .b-workbench .bslib-sidebar-layout > .sidebar {
+    grid-row: 2 !important;
   }
 
   .calib-header {
@@ -445,13 +2791,255 @@ body {
   }
 
   .calib-row {
-    grid-template-columns: 1fr;
-    gap: 0.35rem;
-    padding: 0.65rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px 16px;
+  }
+
+  .calib-row .calib-node,
+  .calib-row .calib-status {
+    grid-column: 1 / -1;
+  }
+
+  .calib-cell[data-label]::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 6px;
+    color: var(--app-muted);
+    font-family: var(--app-font-text);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: 0.01em;
+  }
+}
+
+/* On phones the raster keeps the server-rendered height, which leaves a very
+   tall narrow sliver; cap it so the figure stays legible in the viewport. */
+@media (max-width: 767.98px) {
+  .b-plot-wrap .shiny-plot-output img {
+    width: auto;
+    max-width: 100%;
+    max-height: 60vh;
+    height: auto;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 767.98px) {
+  #shiny-notification-panel {
+    top: 56px !important;
+    right: 20px !important;
+    left: 20px !important;
+    width: auto !important;
+  }
+
+  .shiny-notification.shiny-notification {
+    padding: 12px 36px 12px 30px;
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  .shiny-notification::before {
+    top: 18px;
+    left: 16px;
+  }
+
+  .hero {
+    padding: 40px 0 36px;
+  }
+
+  .hero-inner {
+    padding: 0 20px;
+  }
+
+  .hero-title {
+    font-size: 30px;
+  }
+
+  .hero-lead {
+    font-size: 17px;
+    line-height: 1.5;
+  }
+
+  .hero-meta {
+    margin-top: 20px;
+  }
+
+  .workbench {
+    padding: 20px 0 48px;
+  }
+
+  .workbench-inner {
+    padding: 0 20px;
+  }
+
+  .step-main {
+    padding: 24px 20px;
+  }
+
+  .a-preview {
+    padding: 18px;
+  }
+
+  .step-title {
+    font-size: 24px;
+  }
+
+  .step-hint {
+    margin-bottom: 22px;
+    font-size: 14px;
+  }
+
+  .step-footer {
+    margin-top: 28px;
+    padding-top: 20px;
   }
 
   .adv-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .calib-table {
+    border: 0;
+    background: transparent;
+  }
+
+  .calib-header {
+    display: none;
+  }
+
+  .calib-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+    margin-bottom: 12px;
+    padding: 16px;
+    border: 1px solid var(--app-hairline) !important;
+    border-radius: var(--app-radius-md);
+    background: var(--app-card);
+  }
+
+  .calib-row + .calib-row {
+    border-top: 1px solid var(--app-hairline);
+  }
+
+  .calib-cell[data-label]::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 6px;
+    color: var(--app-muted);
+    font-family: var(--app-font-text);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: 0.01em;
+  }
+
+  .calib-table .form-control {
+    min-height: 44px;
+  }
+
+  .b-toolbar {
+    padding: 12px 18px;
+  }
+
+  .b-plot-wrap {
+    padding: 12px 14px 16px;
+  }
+
+  .b-status-wrap {
+    padding: 16px 14px 0;
+  }
+
+  .export-actions {
+    align-items: stretch;
+  }
+
+  .export-actions .btn {
+    width: 100%;
+  }
+
+  .about-card {
+    padding: 24px 20px;
+  }
+
+  .about-card-title {
+    font-size: 24px;
+  }
+
+  .about-dl {
+    grid-template-columns: 130px minmax(0, 1fr);
+  }
+
+  .modal-header,
+  .modal-footer {
+    padding: 20px;
+  }
+
+  .modal-body {
+    padding: 8px 20px;
+  }
+
+  /* Shiny's dialog spans the full viewport width on phones, which puts text
+     flush against both screen edges. */
+  .modal-dialog {
+    max-width: calc(100vw - 32px);
+    margin-right: 16px;
+    margin-left: 16px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .navbar > .container-fluid {
+    padding: 0 20px;
+  }
+
+  .navbar-collapse.show,
+  .navbar-collapse.collapsing {
+    margin: 0 -20px;
+    padding: 8px 20px 18px;
+  }
+
+  .app-version {
+    display: none;
+  }
+
+  .hero-title {
+    font-size: 28px;
+  }
+
+  .step-footer {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .step-footer .btn {
+    width: 100%;
+  }
+
+  .btn {
+    min-height: 44px;
+  }
+
+  .btn-default.btn-sm {
+    min-height: 44px;
+    padding: 10px 18px;
+  }
+
+  .about-dl {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px 0;
+  }
+
+  .about-dl dt {
+    margin-top: 10px;
+  }
+
+  .about-dl dt:first-child {
+    margin-top: 0;
+  }
+
+  .export-grid {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -461,5 +3049,27 @@ body {
   *::after {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Locked-step and muted copy must stay readable when the user asks for more
+   contrast, so drop the surfaces that rely on a subtle tonal step. */
+@media (prefers-contrast: more) {
+  :root {
+    --app-muted: #3a3a3c;
+    --app-hairline: #6e6e73;
+    --app-divider: #8e8e93;
+  }
+
+  [data-bs-theme="dark"] {
+    --app-muted: #d2d2d7;
+    --app-hairline: #98989d;
+    --app-divider: #aeaeb2;
+  }
+
+  .btn.step-btn.locked {
+    border-style: solid;
+    border-width: 2px;
   }
 }

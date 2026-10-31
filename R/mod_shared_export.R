@@ -6,48 +6,61 @@ export_controls_ui <- function(ns, i18n, values, prefix = "export") {
     values %||% list()
   )
   htmltools::tagList(
-    shiny::selectInput(
-      inputId = ns(paste0(prefix, "_format")),
-      label = i18n$tr("lbl_format"),
-      choices = stats::setNames(
-        c("pdf", "png", "svg"),
-        c(i18n$tr("fmt_pdf"), i18n$tr("fmt_png"), i18n$tr("fmt_svg"))
+    htmltools::tags$div(
+      class = "export-grid",
+      shiny::selectInput(
+        inputId = ns(paste0(prefix, "_format")),
+        label = i18n$tr("lbl_format"),
+        choices = stats::setNames(
+          c("pdf", "png", "svg"),
+          c(i18n$tr("fmt_pdf"), i18n$tr("fmt_png"), i18n$tr("fmt_svg"))
+        ),
+        selected = values$format,
+        width = "100%"
       ),
-      selected = values$format,
-      width = "100%"
-    ),
-    shiny::selectInput(
-      inputId = ns(paste0(prefix, "_plot_theme")),
-      label = i18n$tr("theme_plot_label"),
-      choices = stats::setNames(
-        c("match", "print"),
-        c(i18n$tr("theme_plot_match"), i18n$tr("theme_plot_print"))
+      shiny::conditionalPanel(
+        condition = sprintf("input['%s'] !== 'pdf'", ns(paste0(prefix, "_format"))),
+        shiny::selectInput(
+          inputId = ns(paste0(prefix, "_plot_theme")),
+          label = i18n$tr("theme_export_label"),
+          choices = stats::setNames(
+            c("match", "print"),
+            c(i18n$tr("theme_plot_match"), i18n$tr("theme_plot_print"))
+          ),
+          selected = values$plot_theme,
+          width = "100%"
+        )
       ),
-      selected = values$plot_theme,
-      width = "100%"
-    ),
-    shiny::numericInput(
-      inputId = ns(paste0(prefix, "_width")),
-      label = i18n$tr("lbl_width"),
-      value = values$width,
-      min = 2, max = 16, step = 0.5, width = "100%"
-    ),
-    shiny::numericInput(
-      inputId = ns(paste0(prefix, "_height")),
-      label = i18n$tr("lbl_height"),
-      value = values$height,
-      min = 2, max = 12, step = 0.5, width = "100%"
-    ),
-    shiny::conditionalPanel(
-      condition = sprintf("input['%s'] === 'png'", ns(paste0(prefix, "_format"))),
       shiny::numericInput(
-        inputId = ns(paste0(prefix, "_dpi")),
-        label = i18n$tr("lbl_dpi"),
-        value = values$dpi,
-        min = 72, max = 200, step = 10, width = "100%"
+        inputId = ns(paste0(prefix, "_width")),
+        label = i18n$tr("lbl_width"),
+        value = values$width,
+        min = 2, max = 16, step = 0.5, width = "100%"
+      ),
+      shiny::numericInput(
+        inputId = ns(paste0(prefix, "_height")),
+        label = i18n$tr("lbl_height"),
+        value = values$height,
+        min = 2, max = 12, step = 0.5, width = "100%"
+      ),
+      shiny::conditionalPanel(
+        condition = sprintf("input['%s'] === 'png'", ns(paste0(prefix, "_format"))),
+        shiny::numericInput(
+          inputId = ns(paste0(prefix, "_dpi")),
+          label = i18n$tr("lbl_dpi"),
+          value = values$dpi,
+          min = 72, max = 200, step = 10, width = "100%"
+        )
       )
     ),
-    htmltools::tags$p(class = "form-hint", i18n$tr("pdf_print_note")),
+    shiny::conditionalPanel(
+      condition = sprintf("input['%s'] === 'pdf'", ns(paste0(prefix, "_format"))),
+      htmltools::tags$p(class = "form-hint", i18n$tr("pdf_print_note"))
+    ),
+    shiny::conditionalPanel(
+      condition = sprintf("input['%s'] !== 'pdf'", ns(paste0(prefix, "_format"))),
+      htmltools::tags$p(class = "form-hint", i18n$tr("export_colour_note"))
+    ),
     htmltools::tags$p(class = "form-hint", i18n$tr("ascii_name_hint"))
   )
 }

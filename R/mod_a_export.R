@@ -5,7 +5,7 @@ step6_ui <- function(ns, i18n, a) {
     return(htmltools::tagList(
       htmltools::tags$div(
         class = "step-block",
-        htmltools::tags$h4(i18n$tr("step6_title")),
+        htmltools::tags$h2(class = "step-title", i18n$tr("step6_title")),
         htmltools::tags$p(class = "step-hint", i18n$tr("step6_hint")),
         htmltools::tags$div(class = "alert alert-info app-alert", i18n$tr("export_no_results"))
       )
@@ -15,18 +15,19 @@ step6_ui <- function(ns, i18n, a) {
   htmltools::tagList(
     htmltools::tags$div(
       class = "step-block",
-      htmltools::tags$h4(i18n$tr("step6_title")),
+      htmltools::tags$h2(class = "step-title", i18n$tr("step6_title")),
       htmltools::tags$p(class = "step-hint", i18n$tr("step6_hint")),
       shiny::uiOutput(ns("export_stale")),
       shiny::uiOutput(ns("export_actions")),
-      htmltools::tags$h5(i18n$tr("export_tree_preview")),
+      htmltools::tags$h3(i18n$tr("export_tree_preview")),
       shiny::plotOutput(ns("result_tree"), height = "420px"),
-      htmltools::tags$h5(i18n$tr("export_tre_preview")),
+      htmltools::tags$h3(i18n$tr("export_tre_preview")),
       htmltools::tags$p(class = "form-hint", i18n$tr("export_tre_hint")),
       shiny::uiOutput(ns("tre_preview")),
-      htmltools::tags$h5(i18n$tr("export_summary")),
+      htmltools::tags$h3(i18n$tr("export_summary")),
+      htmltools::tags$p(class = "form-hint", i18n$tr("estimate_param_note")),
       shiny::uiOutput(ns("summary_table")),
-      htmltools::tags$h5(i18n$tr("export_distributions")),
+      htmltools::tags$h3(i18n$tr("export_distributions")),
       htmltools::tags$p(class = "form-hint", i18n$tr("export_distributions_hint")),
       export_controls_ui(ns, i18n, a$export, prefix = "export")
     )
@@ -107,10 +108,6 @@ mod_a_export_server <- function(input, output, session, ns, state, set_a,
     results <- state$a$results
     if (is.null(results)) return(NULL)
     text_id <- ns("tre_text")
-    copy_js <- sprintf(
-      "navigator.clipboard.writeText(document.getElementById('%s').innerText); return false;",
-      text_id
-    )
     htmltools::tags$div(
       htmltools::tags$pre(
         id = text_id,
@@ -121,8 +118,11 @@ mod_a_export_server <- function(input, output, session, ns, state, set_a,
         class = "copy-row",
         htmltools::tags$button(
           type = "button",
-          class = "btn btn-outline-secondary btn-sm",
-          onclick = copy_js,
+          class = "btn btn-outline-secondary btn-sm js-copy-tre",
+          `data-copy-target` = text_id,
+          `data-copy-label` = i18n$tr("btn_copy_tre"),
+          `data-copied` = i18n$tr("copied"),
+          `aria-live` = "polite",
           i18n$tr("btn_copy_tre")
         ),
         htmltools::tags$p(class = "form-hint", i18n$tr("copy_help"))
@@ -132,12 +132,12 @@ mod_a_export_server <- function(input, output, session, ns, state, set_a,
 
   output$result_tree <- shiny::renderPlot({
     results <- state$a$results
+    cols <- plot_colors_for(ui_prefs)
     if (is.null(results)) {
       graphics::plot.new()
-      graphics::text(0.5, 0.5, i18n$tr("estimate_no_results"), col = "#6C757D")
+      graphics::text(0.5, 0.5, i18n$tr("estimate_no_results"), col = cols$muted)
       return(invisible(NULL))
     }
-    cols <- plot_colors_for(ui_prefs)
     view <- state$a$view %||% list(show_node_ids = TRUE, show_tip_labels = TRUE)
     with_plot_theme(cols, plot_calibrated_tree(
       results$final_phy,
@@ -200,14 +200,15 @@ mod_a_export_server <- function(input, output, session, ns, state, set_a,
       values <- export_values(input, fallback = state$a$export)
       ws <- session_workspace(session, "output")
       path <- file.path(ws, paste0("node_distributions.", values$format))
-      theme <- values$plot_theme
+      theme <- if (identical(values$format, "pdf")) "print" else values$plot_theme
       mode <- ui_prefs$theme$mode()
+      lang <- ui_prefs$i18n$lang()
 
       if (identical(values$format, "pdf")) {
         export_distributions_pdf(
           path, results,
           width = values$width, height = values$height,
-          plot_theme = theme, mode = mode
+          plot_theme = theme, mode = mode, lang = lang
         )
       } else {
         export_distributions_image(
@@ -215,7 +216,7 @@ mod_a_export_server <- function(input, output, session, ns, state, set_a,
           dev = values$format,
           width = values$width, height = values$height,
           res = values$dpi,
-          plot_theme = theme, mode = mode
+          plot_theme = theme, mode = mode, lang = lang
         )
       }
       copy_download_file(path, file, ws)

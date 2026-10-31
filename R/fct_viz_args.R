@@ -11,7 +11,7 @@ viz_defaults <- function() {
     add_time_scale = TRUE,
     add_abs_time = TRUE,
     scale_res = "Epoch",
-    label_timescale_names = FALSE,
+    label_timescale_names = TRUE,
     time_correction = 1,
     col_age = "",
     tip_lengths = FALSE,
@@ -47,6 +47,18 @@ viz_defaults <- function() {
 
 viz_ui_only_names <- function() {
   c("all_nodes_raw", "pos_age_auto", "abs_age_mgp_raw", "plot_height_in")
+}
+
+viz_auto_tip_cex <- function(n_tip) {
+  n_tip <- as.numeric(n_tip)
+  if (!is.finite(n_tip) || n_tip <= 0) return(0.7)
+  if (n_tip > 200) 0.3 else if (n_tip > 150) 0.36 else if (n_tip > 100) 0.42 else if (n_tip > 60) 0.5 else if (n_tip > 30) 0.6 else 0.7
+}
+
+viz_auto_plot_height <- function(n_tip) {
+  n_tip <- as.numeric(n_tip)
+  if (!is.finite(n_tip) || n_tip <= 0) return(7)
+  max(7, min(12, 4 + n_tip * 0.06))
 }
 
 viz_analysis_types <- function() {

@@ -14,14 +14,14 @@ parameter_table_html <- function(parameters, i18n) {
     class = "table table-sm parameter-table",
     htmltools::tags$thead(
       htmltools::tags$tr(
-        htmltools::tags$th(i18n$tr("lbl_parameters")),
-        htmltools::tags$th("")
+        htmltools::tags$th(scope = "col", i18n$tr("lbl_parameters")),
+        htmltools::tags$th(scope = "col", i18n$tr("lbl_value"))
       )
     ),
     htmltools::tags$tbody(
       lapply(seq_along(values), function(i) {
         htmltools::tags$tr(
-          htmltools::tags$td(labels[i]),
+          htmltools::tags$th(scope = "row", labels[i]),
           htmltools::tags$td(format(values[i], trim = TRUE, digits = 8))
         )
       })
@@ -34,7 +34,7 @@ step5_ui <- function(ns, i18n, a) {
     return(htmltools::tagList(
       htmltools::tags$div(
         class = "step-block",
-        htmltools::tags$h4(i18n$tr("step5_title")),
+        htmltools::tags$h2(class = "step-title", i18n$tr("step5_title")),
         htmltools::tags$p(class = "step-hint", i18n$tr("step5_hint")),
         htmltools::tags$div(class = "alert alert-info app-alert", i18n$tr("a_need_tree"))
       )
@@ -44,7 +44,7 @@ step5_ui <- function(ns, i18n, a) {
   htmltools::tagList(
     htmltools::tags$div(
       class = "step-block",
-      htmltools::tags$h4(i18n$tr("step5_title")),
+      htmltools::tags$h2(class = "step-title", i18n$tr("step5_title")),
       htmltools::tags$p(class = "step-hint", i18n$tr("step5_hint")),
       shiny::uiOutput(ns("estimate_stale")),
       shiny::uiOutput(ns("estimate_error_alert")),
@@ -53,7 +53,9 @@ step5_ui <- function(ns, i18n, a) {
         label = i18n$tr("estimate_run"),
         type = "primary"
       ),
-      htmltools::tags$p(class = "form-hint", i18n$tr("estimate_gamma_note")),
+      if (any(vapply(a$calibrated, function(one) identical(one$method, "gamma"), logical(1)))) {
+        htmltools::tags$p(class = "form-hint", i18n$tr("estimate_gamma_note"))
+      },
       shiny::uiOutput(ns("estimate_results"))
     )
   )
@@ -131,7 +133,8 @@ mod_a_estimate_server <- function(input, output, session, ns, state, set_a,
           with_plot_theme(cols, plot_node_distribution(
             current$nodes[[idx]],
             cols = cols,
-            cex = 0.9
+            cex = 0.9,
+            title = i18n$tr("plot_node_title", node, current$nodes[[idx]]$method)
           ))
         }, bg = "transparent", height = 230)
       })
@@ -176,7 +179,7 @@ mod_a_estimate_server <- function(input, output, session, ns, state, set_a,
         class = "result-card",
         htmltools::tags$div(
           class = "result-head",
-          htmltools::tags$h5(paste0(
+          htmltools::tags$h4(paste0(
             i18n$tr("estimate_node", node), " \u00b7 ", one$method
           )),
           htmltools::tags$span(
@@ -194,7 +197,8 @@ mod_a_estimate_server <- function(input, output, session, ns, state, set_a,
         class = "alert alert-info app-alert", role = "status",
         i18n$tr("estimate_known_warnings")
       ),
-      htmltools::tags$h5(i18n$tr("estimate_results")),
+      htmltools::tags$h3(i18n$tr("estimate_results")),
+      htmltools::tags$p(class = "form-hint", i18n$tr("estimate_param_note")),
       cards
     )
   })

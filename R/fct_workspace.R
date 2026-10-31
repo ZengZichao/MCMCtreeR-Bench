@@ -49,7 +49,8 @@ has_allowed_extension <- function(name, allowed = allowed_upload_extensions()) {
 }
 
 stage_uploaded_files <- function(files, workspace, allowed = allowed_upload_extensions()) {
-  if (is.null(files) || nrow(files) == 0) stop(app_error("err_file_empty"))
+  if (is.null(files)) stop(app_error("err_no_file_selected"))
+  if (nrow(files) == 0) stop(app_error("err_file_empty"))
   dest_paths <- character(nrow(files))
   sizes <- numeric(nrow(files))
 

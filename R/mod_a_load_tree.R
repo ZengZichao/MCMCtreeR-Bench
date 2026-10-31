@@ -5,7 +5,7 @@ step1_ui <- function(ns, i18n, a) {
   htmltools::tagList(
     htmltools::tags$div(
       class = "step-block",
-      htmltools::tags$h4(i18n$tr("step1_title")),
+      htmltools::tags$h2(class = "step-title", i18n$tr("step1_title")),
       htmltools::tags$p(class = "step-hint", i18n$tr("step1_hint")),
       shiny::radioButtons(
         inputId = ns("load_mode"),
@@ -28,14 +28,6 @@ step1_ui <- function(ns, i18n, a) {
           buttonLabel = i18n$tr("browse"),
           placeholder = i18n$tr("upload_none"),
           width = "100%"
-        ),
-        htmltools::tags$p(
-          class = "form-hint",
-          i18n$tr("file_upload_hint", ".tre, .nwk, .newick, .nexus, .nex, .txt")
-        ),
-        htmltools::tags$p(
-          class = "form-hint",
-          i18n$tr("max_upload_hint", format_mb(LIMITS$max_upload_bytes))
         )
       ),
       shiny::conditionalPanel(
@@ -53,10 +45,26 @@ step1_ui <- function(ns, i18n, a) {
         condition = sprintf("input['%s'] === 'example'", ns("load_mode")),
         htmltools::tags$p(class = "form-hint", i18n$tr("tree_example_hint"))
       ),
-      shiny::actionButton(
-        inputId = ns("load_tree"),
-        label = i18n$tr("btn_load_tree"),
-        class = "btn-primary"
+      # The action sits directly under its input; the reference hints used to
+      # push it two paragraphs away from the field it acts on.
+      htmltools::tags$div(
+        class = "step-action",
+        shiny::actionButton(
+          inputId = ns("load_tree"),
+          label = i18n$tr("btn_load_tree"),
+          class = "btn-primary"
+        )
+      ),
+      shiny::conditionalPanel(
+        condition = sprintf("input['%s'] === 'file'", ns("load_mode")),
+        htmltools::tags$p(
+          class = "form-hint",
+          i18n$tr("file_upload_hint", ".tre, .nwk, .newick, .nexus, .nex, .txt")
+        ),
+        htmltools::tags$p(
+          class = "form-hint",
+          i18n$tr("max_upload_hint", format_mb(LIMITS$max_upload_bytes))
+        )
       ),
       shiny::uiOutput(ns("tree_report"))
     )
@@ -94,7 +102,8 @@ mod_a_load_tree_server <- function(input, output, session, ns, state, set_a,
     outcome <- tryCatch({
       if (identical(mode, "file")) {
         files <- input$tree_file
-        if (is.null(files) || nrow(files) == 0) stop(app_error("err_file_empty"))
+        if (is.null(files)) stop(app_error("err_no_file_selected"))
+        if (nrow(files) == 0) stop(app_error("err_file_empty"))
         check <- check_upload_files(files)
         if (!isTRUE(check$ok)) {
           stop(do.call(app_error, c(list(check$key), check$args)))
@@ -114,9 +123,10 @@ mod_a_load_tree_server <- function(input, output, session, ns, state, set_a,
         source_label <- i18n$tr("tree_source_paste")
         parsed$phy
       } else {
-        example_env <- new.env(parent = emptyenv())
-        utils::data("apeData", package = "MCMCtreeR", envir = example_env)
-        phy <- example_env$apeData$apeTree
+        # MCMCtreeR::apeData ships a topology-only tree, which makes the example
+        # report "no branch lengths" and its export unreadable by module B. The
+        # bundled copy is that same tree with deterministic ultrametric lengths.
+        phy <- read_tree_file(example_tree_file())$phy
         source_label <- i18n$tr("tree_source_example")
         phy
       }
@@ -180,15 +190,6 @@ mod_a_load_tree_server <- function(input, output, session, ns, state, set_a,
 
     notify <- i18n$tr("msg_tree_loaded", report$n_tip, report$n_node)
     user_notification(notify, type = "message")
-    if (isTRUE(multiple)) {
-      user_notification(i18n$tr("err_multiple_trees_warn"), type = "warning", duration = 7)
-    }
-    if (!isTRUE(report$has_branch_lengths)) {
-      user_notification(i18n$tr("err_no_branch_warn"), type = "warning", duration = 8)
-    }
-    if (!isTRUE(report$is_binary)) {
-      user_notification(i18n$tr("err_not_binary_warn"), type = "warning", duration = 8)
-    }
     gc()
   })
 

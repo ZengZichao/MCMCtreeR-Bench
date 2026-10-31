@@ -4,16 +4,30 @@
 # they are never written into state$a or state$b and never participate in the
 # result staleness hash.
 
-mod_theme_ui <- function(id) {
+mod_theme_ui <- function(id, i18n = NULL, plot_theme = "match", mode = "light") {
   ns <- shiny::NS(id)
+  label <- function(key, fallback) {
+    if (is.null(i18n)) fallback else i18n$tr(key)
+  }
+  if (!isTRUE(mode %in% c("light", "dark"))) mode <- "light"
+  choices <- stats::setNames(
+    c("match", "print"),
+    c(
+      label("theme_plot_match", "Match interface"),
+      label("theme_plot_print", "Print (white)")
+    )
+  )
   shiny::tags$div(
     class = "theme-switch",
-    bslib::input_dark_mode(id = ns("theme_mode"), mode = NULL),
+    bslib::input_dark_mode(id = ns("theme_mode"), mode = mode),
     shiny::selectInput(
       inputId = ns("plot_theme"),
-      label = NULL,
-      choices = c("match" = "match", "print" = "print"),
-      selected = "match",
+      label = htmltools::tags$span(
+        class = "visually-hidden",
+        label("theme_preview_label", "Preview colours")
+      ),
+      choices = choices,
+      selected = plot_theme,
       width = "auto",
       selectize = FALSE
     )

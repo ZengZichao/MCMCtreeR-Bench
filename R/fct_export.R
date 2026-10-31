@@ -83,7 +83,8 @@ render_to_file <- function(path, width, height, res = 200,
 
 export_distributions_pdf <- function(path, results,
                                      width = 8, height = 6,
-                                     plot_theme = "print", mode = "light") {
+                                     plot_theme = "print", mode = "light",
+                                     lang = "en") {
   render_to_file(
     path = path, width = width, height = height, dev = "pdf",
     plot_theme = plot_theme, mode = mode,
@@ -91,11 +92,11 @@ export_distributions_pdf <- function(path, results,
       nodes <- results$nodes %||% list()
       if (!length(nodes)) {
         graphics::plot.new()
-        graphics::text(0.5, 0.5, "No estimation results", col = cols$fg)
+        graphics::text(0.5, 0.5, tr(lang, "plot_lbl_no_results"), col = cols$fg)
         return(invisible(NULL))
       }
       for (one in nodes) {
-        plot_node_distribution(one, cols = cols, cex = 0.95)
+        plot_node_distribution(one, cols = cols, cex = 0.95, lang = lang)
       }
       invisible(NULL)
     }
@@ -104,13 +105,16 @@ export_distributions_pdf <- function(path, results,
 
 export_distributions_image <- function(path, results, dev = c("png", "svg"),
                                        width = 9, height = 6, res = 200,
-                                       plot_theme = "print", mode = "light") {
+                                       plot_theme = "print", mode = "light",
+                                       lang = "en") {
   dev <- match.arg(dev)
   render_to_file(
     path = path, width = width, height = height, res = res, dev = dev,
     plot_theme = plot_theme, mode = mode,
     draw = function(cols) {
-      plot_distribution_grid(results, cols = cols, max_cols = 2, cex = 0.85)
+      plot_distribution_grid(
+        results, cols = cols, max_cols = 2, cex = 0.85, lang = lang
+      )
     }
   )
 }
@@ -123,7 +127,7 @@ export_time_tree <- function(path, args, dev = c("pdf", "png", "svg"),
     path = path, width = width, height = height, res = res, dev = dev,
     plot_theme = plot_theme, mode = mode,
     draw = function(cols) {
-      do.call(MCMCtreeR::MCMC.tree.plot, args)
+      with_mcmctree_timescale(cols, do.call(MCMCtreeR::MCMC.tree.plot, args))
     }
   )
 }

@@ -24,11 +24,16 @@ b_data_source_panel_ui <- function(ns, i18n, b) {
         label = i18n$tr("b_source_mode"),
         choiceNames = list(
           i18n$tr("b_source_figtree"),
-          i18n$tr("b_source_posterior")
+          i18n$tr("b_source_posterior"),
+          i18n$tr("b_source_example")
         ),
-        choiceValues = list("figtree", "posterior"),
+        choiceValues = list("figtree", "posterior", "example"),
         selected = source_mode,
         inline = TRUE
+      ),
+      shiny::conditionalPanel(
+        condition = sprintf("input['%s'] === 'example'", ns("source_mode")),
+        htmltools::tags$p(class = "form-hint", i18n$tr("b_example_hint"))
       ),
       shiny::conditionalPanel(
         condition = sprintf("input['%s'] === 'figtree'", ns("source_mode")),
@@ -110,10 +115,10 @@ b_data_source_panel_ui <- function(ns, i18n, b) {
       ),
       htmltools::tags$p(class = "form-hint", i18n$tr("b_user_nodeages_hint"))
     ),
-    shiny::actionButton(
-      inputId = ns("parse_source"),
+    bslib::input_task_button(
+      id = ns("parse_source"),
       label = i18n$tr("b_parse_source"),
-      class = "btn-primary"
+      type = "primary"
     ),
     shiny::uiOutput(ns("source_status"))
   )
@@ -167,7 +172,8 @@ parse_figtree_source <- function(path) {
     error = function(e) NULL
   )
   if (is.null(obj) || !inherits(obj, "MCMCtreer")) {
-    stop(app_error("err_parse_tree"))
+    # err_parse_tree names Newick/Nexus, which this field never accepts.
+    stop(app_error("b_figtree_parse_error"))
   }
   phy <- obj$apePhy
   limits <- check_tree_limits(phy)
@@ -264,7 +270,7 @@ mod_b_data_source_server <- function(input, output, session, ns, state, set_b,
 
   shiny::observeEvent(input$source_mode, {
     value <- input$source_mode
-    if (is.null(value) || !value %in% c("figtree", "posterior")) return()
+    if (is.null(value) || !value %in% c("figtree", "posterior", "example")) return()
     b <- state$b
     if (identical(b$source_mode, value)) return()
     b <- b_clear_source(b)
@@ -278,10 +284,15 @@ mod_b_data_source_server <- function(input, output, session, ns, state, set_b,
     analysis <- input$analysis_type %||% "MCMCtree"
     source_mode <- input$source_mode %||% "figtree"
 
-    outcome <- tryCatch({
+    # Parsing can read multi-file MrBayes/RevBayes chains, so give the wait a
+    # visible owner instead of a silent button.
+    outcome <- shiny::withProgress(
+      message = i18n$tr("b_parsing_source"), value = 0, {
+      tryCatch({
       if (identical(analysis, "MCMCtree") && identical(source_mode, "figtree")) {
         file <- input$figtree_file
-        if (is.null(file) || nrow(file) == 0) stop(app_error("err_file_empty"))
+        if (is.null(file)) stop(app_error("err_no_file_selected"))
+        if (nrow(file) == 0) stop(app_error("err_file_empty"))
         check <- check_upload_files(file)
         if (!isTRUE(check$ok)) {
           stop(do.call(app_error, c(list(check$key), check$args)))
@@ -289,10 +300,23 @@ mod_b_data_source_server <- function(input, output, session, ns, state, set_b,
         staged <- stage_uploaded_files(file, workspace, allowed = c(".tre", ".txt"))
         parsed <- parse_figtree_source(staged$path[1])
         list(kind = "figtree", parsed = parsed, n_rows = NA_integer_, n_runs = NA_integer_)
+      } else if (identical(analysis, "MCMCtree") &&
+                 identical(source_mode, "example")) {
+        # Bundled with the package, so it needs no upload and no staging. It is
+        # reported as a posterior source because it carries the same phy+chain
+        # pair that downstream plotting expects.
+        tree_parsed <- parse_tree_for_viz(example_tree_file())
+        chain <- parse_chain_file(example_chain_file())
+        list(
+          kind = "posterior", phy = tree_parsed$phy, chain = chain,
+          report = tree_parsed$report, n_rows = nrow(chain),
+          n_runs = NA_integer_, example = TRUE
+        )
       } else if (identical(analysis, "MCMCtree")) {
         tree_file <- input$b_tree_file
         chain_file <- input$b_chain_file
-        if (is.null(tree_file) || nrow(tree_file) == 0) stop(app_error("err_file_empty"))
+        if (is.null(tree_file)) stop(app_error("err_no_file_selected"))
+        if (nrow(tree_file) == 0) stop(app_error("err_file_empty"))
         if (is.null(chain_file) || nrow(chain_file) == 0) stop(app_error("err_chain_missing"))
         check <- check_upload_files(rbind(tree_file, chain_file))
         if (!isTRUE(check$ok)) {
@@ -313,7 +337,8 @@ mod_b_data_source_server <- function(input, output, session, ns, state, set_b,
         )
       } else if (identical(analysis, "MrBayes")) {
         files <- input$mrbayes_files
-        if (is.null(files) || nrow(files) == 0) stop(app_error("err_file_empty"))
+        if (is.null(files)) stop(app_error("err_no_file_selected"))
+        if (nrow(files) == 0) stop(app_error("err_file_empty"))
         check <- check_upload_files(files)
         if (!isTRUE(check$ok)) {
           stop(do.call(app_error, c(list(check$key), check$args)))
@@ -329,7 +354,8 @@ mod_b_data_source_server <- function(input, output, session, ns, state, set_b,
         )
       } else if (identical(analysis, "RevBayes")) {
         files <- input$revbayes_files
-        if (is.null(files) || nrow(files) == 0) stop(app_error("err_file_empty"))
+        if (is.null(files)) stop(app_error("err_no_file_selected"))
+        if (nrow(files) == 0) stop(app_error("err_file_empty"))
         check <- check_upload_files(files)
         if (!isTRUE(check$ok)) {
           stop(do.call(app_error, c(list(check$key), check$args)))
@@ -345,7 +371,8 @@ mod_b_data_source_server <- function(input, output, session, ns, state, set_b,
       } else {
         tree_file <- input$user_tree
         ages_file <- input$user_nodeages
-        if (is.null(tree_file) || nrow(tree_file) == 0) stop(app_error("err_file_empty"))
+        if (is.null(tree_file)) stop(app_error("err_no_file_selected"))
+        if (nrow(tree_file) == 0) stop(app_error("err_file_empty"))
         if (is.null(ages_file) || nrow(ages_file) == 0) stop(app_error("err_nodeages_format"))
         check <- check_upload_files(rbind(tree_file, ages_file))
         if (!isTRUE(check$ok)) {
@@ -366,7 +393,8 @@ mod_b_data_source_server <- function(input, output, session, ns, state, set_b,
           n_nodes = ages$n_nodes, n_runs = NA_integer_
         )
       }
-    }, error = function(e) e)
+      }, error = function(e) e)
+    })
 
     if (inherits(outcome, "error")) {
       fmt <- format_error(outcome, i18n, fallback = "err_parse_tree")
@@ -389,6 +417,7 @@ mod_b_data_source_server <- function(input, output, session, ns, state, set_b,
     report <- list(
       ok = TRUE,
       kind = outcome$kind,
+      example = isTRUE(outcome$example),
       n_rows = outcome$n_rows,
       n_nodes = outcome$n_nodes %||% NA_integer_,
       n_runs = outcome$n_runs
@@ -431,12 +460,22 @@ mod_b_data_source_server <- function(input, output, session, ns, state, set_b,
     b$source_report <- report
     b$data_ready <- TRUE
     b$plot_error <- NULL
+    if (!is.na(report$n_tip)) {
+      b$params$cex_tips <- viz_auto_tip_cex(report$n_tip)
+      b$params$plot_height_in <- viz_auto_plot_height(report$n_tip)
+      b$params$show_tip_label <- report$n_tip <= 80
+    }
     if (!is.na(report$n_rows) && report$n_rows > LIMITS$manual_redraw_rows) {
       b$auto_redraw <- FALSE
     }
     set_b(b)
     shiny::updateCheckboxInput(session, "build_tree", value = isTRUE(b$params$build_tree))
     shiny::updateNumericInput(session, "n_runs", value = b$params$n_runs)
+    if (!is.na(report$n_tip)) {
+      shiny::updateNumericInput(session, "cex_tips", value = b$params$cex_tips)
+      shiny::updateNumericInput(session, "plot_height_in", value = b$params$plot_height_in)
+      shiny::updateCheckboxInput(session, "show_tip_label", value = isTRUE(b$params$show_tip_label))
+    }
     shiny::updateCheckboxInput(session, "auto_redraw", value = isTRUE(b$auto_redraw))
 
     user_notification(i18n$tr("msg_source_ready"), type = "message")
@@ -461,15 +500,19 @@ mod_b_data_source_server <- function(input, output, session, ns, state, set_b,
       ))
     }
 
-    kind_label <- switch(
-      report$kind,
-      figtree = i18n$tr("b_source_figtree"),
-      posterior = i18n$tr("b_source_posterior"),
-      mrbayes = i18n$tr("b_analysis_mrbayes"),
-      revbayes = i18n$tr("b_analysis_revbayes"),
-      user = i18n$tr("b_analysis_user"),
-      report$kind
-    )
+    kind_label <- if (isTRUE(report$example)) {
+      i18n$tr("b_source_example")
+    } else {
+      switch(
+        report$kind,
+        figtree = i18n$tr("b_source_figtree"),
+        posterior = i18n$tr("b_source_posterior"),
+        mrbayes = i18n$tr("b_analysis_mrbayes"),
+        revbayes = i18n$tr("b_analysis_revbayes"),
+        user = i18n$tr("b_analysis_user"),
+        report$kind
+      )
+    }
 
     items <- list(
       htmltools::tags$li(i18n$tr("b_source_summary", report$n_tip, report$n_node))

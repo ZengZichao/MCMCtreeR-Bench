@@ -7,10 +7,12 @@ mod_i18n_ui <- function(id) {
   ns <- shiny::NS(id)
   shiny::tags$div(
     class = "lang-switch",
-    `aria-label` = shiny::HTML(""),
     shiny::selectInput(
       inputId = ns("lang"),
-      label = NULL,
+      label = htmltools::tags$span(
+        class = "visually-hidden",
+        "Language / \u8bed\u8a00"
+      ),
       choices = c("English" = "en", "\u4e2d\u6587" = "zh"),
       selected = "en",
       width = "auto",

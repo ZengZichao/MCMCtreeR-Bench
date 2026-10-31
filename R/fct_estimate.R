@@ -27,10 +27,10 @@ distribution_curve <- function(one, upper_time = node_upper_time(one)) {
 
 plot_node_distribution <- function(one, cols = plot_colors("print"),
                                    upper_time = node_upper_time(one),
-                                   cex = 1) {
+                                   cex = 1, title = NULL, lang = "en") {
   cols <- cols %||% plot_colors("print")
   method <- one$method
-  title <- paste("Node", one$node, method)
+  title <- title %||% paste("Node", one$node, method)
 
   if (identical(method, "fixed")) {
     age <- as.numeric(one$minAge)
@@ -38,11 +38,12 @@ plot_node_distribution <- function(one, cols = plot_colors("print"),
     graphics::plot(
       NA, xlim = c(0, x_max), ylim = c(0, 1), xaxs = "i", yaxs = "i",
       bty = "l", las = 1, xlab = "Ma", ylab = "density", main = title,
-      cex.axis = 0.8 * cex, cex.lab = 0.85 * cex, cex.main = 0.95 * cex,
+      cex.axis = 0.95 * cex, cex.lab = 0.95 * cex, cex.main = 0.95 * cex,
       col.axis = cols$fg, col.lab = cols$fg, col.main = cols$fg
     )
     graphics::abline(v = age, col = cols$highlight, lwd = 2)
-    graphics::text(age, 0.85, "fixed age", pos = 4, cex = 0.75 * cex, col = cols$muted)
+    graphics::text(age, 0.85, tr(lang, "plot_lbl_fixed_age"),
+                pos = 4, cex = 0.75 * cex, col = cols$muted)
     return(invisible(NULL))
   }
 
@@ -60,14 +61,15 @@ plot_node_distribution <- function(one, cols = plot_colors("print"),
       x, y, type = "n", xlim = c(0, x_max), ylim = c(0, 1.05),
       xaxs = "i", yaxs = "i", bty = "l", las = 1,
       xlab = "Ma", ylab = "density", main = title,
-      cex.axis = 0.8 * cex, cex.lab = 0.85 * cex, cex.main = 0.95 * cex,
+      cex.axis = 0.95 * cex, cex.lab = 0.95 * cex, cex.main = 0.95 * cex,
       col.axis = cols$fg, col.lab = cols$fg, col.main = cols$fg
     )
     graphics::polygon(c(x, rev(x)), c(y, rep(0, length(y))),
                       col = cols$density_fill, border = NA)
     graphics::lines(x, y, col = cols$fg, lwd = 1.4)
     graphics::abline(v = max_age, col = cols$muted, lty = 3)
-    graphics::text(max_age, 0.95, "maximum", pos = 4, cex = 0.75 * cex, col = cols$muted)
+    graphics::text(max_age, 0.95, tr(lang, "plot_lbl_maximum"),
+                pos = 4, cex = 0.75 * cex, col = cols$muted)
     return(invisible(NULL))
   }
 
@@ -84,7 +86,7 @@ plot_node_distribution <- function(one, cols = plot_colors("print"),
     x, y, type = "n", xlim = range(x, finite = TRUE), ylim = c(0, max(y) * 1.05),
     xaxs = "i", yaxs = "i", bty = "l", las = 1,
     xlab = "Ma", ylab = "density", main = title,
-    cex.axis = 0.8 * cex, cex.lab = 0.85 * cex, cex.main = 0.95 * cex,
+    cex.axis = 0.95 * cex, cex.lab = 0.95 * cex, cex.main = 0.95 * cex,
     col.axis = cols$fg, col.lab = cols$fg, col.main = cols$fg
   )
   graphics::polygon(c(x, rev(x)), c(y, rep(0, length(y))),
@@ -101,11 +103,12 @@ plot_node_distribution <- function(one, cols = plot_colors("print"),
 }
 
 plot_distribution_grid <- function(results, cols = plot_colors("print"),
+                                 lang = "en",
                                    max_cols = 2, cex = 0.9) {
   nodes <- results$nodes %||% list()
   if (!length(nodes)) {
     graphics::plot.new()
-    graphics::text(0.5, 0.5, "No estimation results", col = cols$fg)
+    graphics::text(0.5, 0.5, tr(lang, "plot_lbl_no_results"), col = cols$fg)
     return(invisible(NULL))
   }
   n <- length(nodes)
@@ -122,7 +125,8 @@ plot_calibrated_tree <- function(phy, calibrated = list(), cols = plot_colors("p
                                  show_tip_label = TRUE, show_node_ids = TRUE) {
   cols <- cols %||% plot_colors("print")
   n_tip <- ape::Ntip(phy)
-  cex_tip <- if (n_tip > 200) 0.25 else if (n_tip > 100) 0.4 else if (n_tip > 50) 0.55 else 0.8
+  cex_tip <- if (n_tip > 200) 0.25 else if (n_tip > 100) 0.4 else if (n_tip > 50) 0.55 else if (n_tip > 20) 0.68 else 0.9
+  cex_node <- if (n_tip > 100) 0.5 else if (n_tip > 20) 0.65 else 0.8
   pp <- ape::plot.phylo(
     phy,
     type = "phylogram",
@@ -139,9 +143,9 @@ plot_calibrated_tree <- function(phy, calibrated = list(), cols = plot_colors("p
     ape::nodelabels(
       node = internal,
       text = internal,
-      cex = 0.55,
+      cex = cex_node,
       frame = "none",
-      col = cols$muted,
+      col = cols$fg,
       adj = c(-0.15, 1.15)
     )
   }
@@ -152,8 +156,19 @@ plot_calibrated_tree <- function(phy, calibrated = list(), cols = plot_colors("p
       pch = 21,
       bg = cols$highlight,
       col = cols$bg,
-      cex = 1.1
+      cex = 1.5
     )
+    if (isTRUE(show_node_ids)) {
+      ape::nodelabels(
+        node = selected,
+        text = selected,
+        cex = cex_node,
+        frame = "none",
+        font = 2,
+        col = cols$highlight,
+        adj = c(0.5, -0.7)
+      )
+    }
   }
   invisible(last_plot)
 }

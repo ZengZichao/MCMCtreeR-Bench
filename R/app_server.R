@@ -77,7 +77,17 @@ app_server <- function(input, output, session) {
 
   output$nav_a_title <- shiny::renderUI(ui_prefs$i18n$tr("nav_a"))
   output$nav_b_title <- shiny::renderUI(ui_prefs$i18n$tr("nav_b"))
-  output$app_footer <- shiny::renderUI(footer_ui(ui_prefs$i18n))
+  output$nav_about_title <- shiny::renderUI(ui_prefs$i18n$tr("nav_about"))
+  output$nav_theme <- shiny::renderUI({
+    ui_prefs$i18n$lang()
+    mod_theme_ui(
+      "theme",
+      i18n = ui_prefs$i18n,
+      plot_theme = shiny::isolate(ui_prefs$theme$plot_theme()),
+      mode = shiny::isolate(ui_prefs$theme$mode())
+    )
+  })
+  output$about_page <- shiny::renderUI(about_page_ui(ui_prefs$i18n))
 
   show_privacy <- function() {
     if (!is.null(shiny::getDefaultReactiveDomain())) {
@@ -97,10 +107,6 @@ app_server <- function(input, output, session) {
 
   shiny::observeEvent(input$footer_privacy, {
     if (is_button_click(input$footer_privacy)) show_privacy()
-  })
-  shiny::observeEvent(input$footer_about, {
-    if (!is_button_click(input$footer_about)) return()
-    shiny::showModal(about_modal(ui_prefs$i18n))
   })
   shiny::observeEvent(input$footer_cite, {
     if (!is_button_click(input$footer_cite)) return()
@@ -123,7 +129,7 @@ privacy_modal <- function(i18n) {
     title = i18n$tr("privacy_title"),
     htmltools::tags$p(i18n$tr("privacy_body")),
     htmltools::tags$p(
-      class = "footer-muted",
+      class = "modal-muted",
       htmltools::tags$a(
         href = GUI_META$repo, target = "_blank", rel = "noopener noreferrer",
         "README / GitHub"
@@ -133,36 +139,6 @@ privacy_modal <- function(i18n) {
       "privacy_ack", i18n$tr("privacy_ack"), class = "btn-primary"
     ),
     easyClose = FALSE,
-    size = "m"
-  )
-}
-
-about_modal <- function(i18n) {
-  shiny::modalDialog(
-    title = i18n$tr("about_title"),
-    htmltools::tags$p(i18n$tr("about_body")),
-    htmltools::tags$dl(
-      class = "about-list",
-      htmltools::tags$dt(i18n$tr("author_label")),
-      htmltools::tags$dd(paste0(app_author_name(), " (", GUI_META$author_cn, ")")),
-      htmltools::tags$dt(i18n$tr("contact_label")),
-      htmltools::tags$dd(htmltools::tags$a(href = paste0("mailto:", app_email()), app_email())),
-      htmltools::tags$dt(i18n$tr("orcid_label")),
-      htmltools::tags$dd(htmltools::tags$a(
-        href = orcid_url(), target = "_blank", rel = "noopener noreferrer",
-        app_orcid()
-      )),
-      htmltools::tags$dt(i18n$tr("license_label")),
-      htmltools::tags$dd(GUI_META$license),
-      htmltools::tags$dt(i18n$tr("upstream_label")),
-      htmltools::tags$dd(htmltools::tags$a(
-        href = UPSTREAM$repo, target = "_blank", rel = "noopener noreferrer",
-        paste0(UPSTREAM$package, " @ ", UPSTREAM$commit)
-      ))
-    ),
-    htmltools::tags$p(class = "footer-muted", i18n$tr("footer_upstream")),
-    footer = shiny::modalButton(i18n$tr("close")),
-    easyClose = TRUE,
     size = "m"
   )
 }

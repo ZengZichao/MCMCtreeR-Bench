@@ -3,28 +3,49 @@
 mod_a_ui <- function(id) {
   ns <- shiny::NS(id)
   htmltools::tagList(
-    htmltools::tags$div(
-      class = "module-a",
-      bslib::layout_columns(
-        col_widths = c(2, 6, 4),
+    htmltools::tags$section(
+      class = "hero hero--compact",
+      htmltools::tags$div(
+        class = "hero-inner",
+        shiny::uiOutput(ns("hero"))
+      )
+    ),
+    htmltools::tags$section(
+      class = "workbench workbench--priors",
+      id = "a-workbench",
+      htmltools::tags$div(
+        class = "workbench-inner",
         htmltools::tags$div(
-          class = "step-nav",
-          htmltools::tags$h5(shiny::uiOutput(ns("step_nav_title"), inline = TRUE)),
-          shiny::uiOutput(ns("step_nav"))
-        ),
-        htmltools::tags$div(
-          class = "step-main",
-          shiny::uiOutput(ns("step_content")),
-          shiny::uiOutput(ns("step_footer"))
-        ),
-        htmltools::tags$div(
-          class = "a-preview",
-          htmltools::tags$h5(shiny::uiOutput(ns("preview_title"), inline = TRUE)),
-          shiny::uiOutput(ns("preview_controls")),
-          shiny::plotOutput(
-            outputId = ns("tree_plot"),
-            click = ns("tree_plot_click"),
-            height = "440px"
+          class = "workbench-grid",
+          htmltools::tags$aside(
+            class = "step-nav surface-card",
+            htmltools::tags$h2(
+              class = "rail-title",
+              shiny::uiOutput(ns("step_nav_title"), inline = TRUE)
+            ),
+            shiny::uiOutput(ns("step_nav"))
+          ),
+          htmltools::tags$main(
+            class = "step-main surface-card",
+            shiny::uiOutput(ns("step_content")),
+            shiny::uiOutput(ns("step_footer"))
+          ),
+          htmltools::tags$aside(
+            class = "a-preview surface-card",
+            htmltools::tags$h2(
+              class = "preview-title",
+              shiny::uiOutput(ns("preview_title"), inline = TRUE)
+            ),
+            shiny::uiOutput(ns("preview_controls")),
+            htmltools::tags$div(
+              class = "plot-frame",
+              shiny::plotOutput(
+                outputId = ns("tree_plot"),
+                click = ns("tree_plot_click"),
+                height = "330px"
+              )
+            ),
+            shiny::uiOutput(ns("preview_empty"))
           )
         )
       )
@@ -135,14 +156,34 @@ mod_a_server <- function(id, state, set_a, ui_prefs) {
     mod_a_export_server(input, output, session, ns, state, set_a, bump, i18n, ui_prefs, stale, workspace)
 
     output$step_nav_title <- shiny::renderUI(i18n$tr("step_nav_title"))
-    output$preview_title <- shiny::renderUI(i18n$tr("tree_plot_title"))
+    output$preview_title <- shiny::renderUI({
+      i18n$lang()
+      a_revision()
+      a <- shiny::isolate(state$a)
+      key <- if (identical(as.integer(a$step), 2L)) {
+        "tree_plot_title"
+      } else {
+        "preview_title_tree"
+      }
+      i18n$tr(key)
+    })
+    output$hero <- shiny::renderUI({
+      hero_content(
+        eyebrow = i18n$tr("app_title"),
+        title = i18n$tr("a_hero_title"),
+        lead = i18n$tr("a_hero_lead"),
+        chips = c("Newick", "Nexus", "MCMCtree")
+      )
+    })
 
     output$preview_controls <- shiny::renderUI({
       i18n$lang()
+      a_revision()
       a <- shiny::isolate(state$a)
       view <- a$view %||% list(show_node_ids = TRUE, show_tip_labels = TRUE)
       disabled <- is.null(a$phy)
       htmltools::tags$div(
+        class = "preview-controls",
         inert = if (disabled) "" else NULL,
         shiny::checkboxInput(
           inputId = ns("show_node_ids"),
@@ -154,6 +195,14 @@ mod_a_server <- function(id, state, set_a, ui_prefs) {
           label = i18n$tr("show_tip_labels"),
           value = isTRUE(view$show_tip_labels)
         )
+      )
+    })
+
+    output$preview_empty <- shiny::renderUI({
+      if (!is.null(state$a$phy)) return(NULL)
+      htmltools::tags$p(
+        class = "plot-caption",
+        i18n$tr("a_preview_empty")
       )
     })
 
@@ -195,12 +244,21 @@ mod_a_server <- function(id, state, set_a, ui_prefs) {
               if (is_enabled) "" else "locked",
               if (step < current && is_enabled) "done" else ""
             ),
-            disabled = if (is_enabled) NULL else "disabled",
-            `aria-current` = if (is_active) "step" else NULL,
+            # aria-disabled rather than disabled: a disabled button cannot be
+            # focused, so the lock reason would be unreachable by keyboard and
+            # screen readers. go_step() already refuses and explains.
             `aria-disabled` = if (is_enabled) "false" else "true",
-            title = if (!is.null(hint_key)) i18n$tr(hint_key) else NULL,
+            `aria-current` = if (is_active) "step" else NULL,
+            `aria-describedby` = if (is.null(hint_key)) NULL else ns(paste0("go_step_", step, "_hint")),
             htmltools::tags$span(class = "step-index", step),
-            htmltools::tags$span(class = "step-label", i18n$tr(titles[step]))
+            htmltools::tags$span(class = "step-label", i18n$tr(titles[step])),
+            if (!is.null(hint_key)) {
+              htmltools::tags$span(
+                id = ns(paste0("go_step_", step, "_hint")),
+                class = "visually-hidden",
+                i18n$tr(hint_key)
+              )
+            }
           )
         })
       )
@@ -261,11 +319,7 @@ mod_a_server <- function(id, state, set_a, ui_prefs) {
 
       if (is.null(phy)) {
         with_plot_theme(cols, {
-          graphics::plot.new()
-          graphics::text(
-            0.5, 0.5, "Load a tree to begin",
-            col = cols$muted, cex = 1.1
-          )
+          plot_empty_state(cols)
         })
         plot_coords(NULL)
         return(invisible(NULL))
