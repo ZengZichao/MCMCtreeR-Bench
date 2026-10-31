@@ -1813,37 +1813,43 @@
   },
   "files": {
     ".Rbuildignore": {
-      "checksum": "87f9d4ec0ffedff42d9aa1a7e04c6c96"
+      "checksum": "a0c2445e9ee0f8bcf9778e2b2edcdc04"
     },
     "app.R": {
       "checksum": "2cb9881d96eab6694db9ffc209399a5a"
     },
     "DESCRIPTION": {
-      "checksum": "29aa4212d80d9f7f8b9343687362b5fa"
+      "checksum": "d0f370c72577c8de13a6aba5db00534f"
     },
     "inst/app/www/app.js": {
-      "checksum": "74183c99147f0eeb7d08a361b585850c"
+      "checksum": "9bde6e39cd82730bd64a59420fd18af2"
     },
     "inst/app/www/custom.css": {
-      "checksum": "a1f9d715acbd08b05801cf2621c64a80"
+      "checksum": "6178b3fdfe291f2f68f2f8f550f8bbd8"
     },
     "inst/CITATION": {
       "checksum": "332a76d0ea30634b732d7adc3a5b9d87"
     },
+    "inst/extdata/example_chain.tsv": {
+      "checksum": "a1f07118225c1f555ce7fe082bbe05dc"
+    },
+    "inst/extdata/example_tree.tre": {
+      "checksum": "93c93bc2f4e1572e5a3459e1897578f3"
+    },
     "LICENSE": {
-      "checksum": "d536b7003b666f1b85352b4e1c0055eb"
+      "checksum": "b234ee4d69f5fce4486a80fdaf4a4263"
     },
     "NAMESPACE": {
       "checksum": "106885cfb899cb853cea66bb46acb102"
     },
     "R/app_config.R": {
-      "checksum": "75f059139d68990dfa12d4b55ea539ea"
+      "checksum": "b66d8d342b7b372573262bb9e266c07a"
     },
     "R/app_server.R": {
-      "checksum": "c89bdca0fe91b2c246fe6ce9915e7f86"
+      "checksum": "0b0a0ecc7c94345b0fa92487868bb865"
     },
     "R/app_ui.R": {
-      "checksum": "2569da757e071e45c4183af50ac99fd4"
+      "checksum": "355b800e5f3e69659f11939fc153ce2c"
     },
     "R/fct_args.R": {
       "checksum": "5446528e9f515ca2ac6720c3dba8edfb"
@@ -1852,13 +1858,13 @@
       "checksum": "c4856368e621c7a15e6e3f093a397659"
     },
     "R/fct_errors.R": {
-      "checksum": "2dc05911499693ae6145ca34892bd270"
+      "checksum": "5a5d2d63a5f5e356982761af0e93a89b"
     },
     "R/fct_estimate.R": {
-      "checksum": "4eb1d35f6928ea318d0648da0f1fff30"
+      "checksum": "3abace938054475822ce508b74acbf49"
     },
     "R/fct_export.R": {
-      "checksum": "9462300353bd08f380996fb0fd3ff33f"
+      "checksum": "b1cd4a88a70bd147fbf2183e97a4ae5f"
     },
     "R/fct_groups.R": {
       "checksum": "10da2713f7e69f5c99ed474a0c67f80d"
@@ -1873,37 +1879,37 @@
       "checksum": "ce9e703b511ab4a3e567dbd7542d3e52"
     },
     "R/fct_plot_theme.R": {
-      "checksum": "f876a0cd7e2b07331ff2dd447787d900"
+      "checksum": "74547d20f2bd75059c3802098de6ba87"
     },
     "R/fct_tree_click.R": {
       "checksum": "b5c32f8d4e4580dd30afbe6edd30ca20"
     },
     "R/fct_viz_args.R": {
-      "checksum": "655e14657591b64985fb8dc7acbb9d0d"
+      "checksum": "2fa9835e20ce4f89ba5fbc22222a7a10"
     },
     "R/fct_workspace.R": {
-      "checksum": "4c5a84398736ee7dd7c16d2865a7e11a"
+      "checksum": "5faaadca312ea1bf6adf9cb3b05f1bf8"
     },
     "R/mod_a_advanced_params.R": {
-      "checksum": "018164d3292aad148ea1339d594f2336"
+      "checksum": "f28ea715f908a1c3d5e37a5d1e5cce25"
     },
     "R/mod_a_calibration_table.R": {
-      "checksum": "72f60362d8c01ea9b4200246876afdc1"
+      "checksum": "3295c11ab8edcc27d601535873c05de9"
     },
     "R/mod_a_estimate.R": {
-      "checksum": "68d7f2c6b0908f7bc555dcf05fe65f96"
+      "checksum": "c3bc8696febf906bec31bd94b71e45a0"
     },
     "R/mod_a_export.R": {
-      "checksum": "a79f82c487d3ebbab3ab826c5faac2e5"
+      "checksum": "6e721fe2ca2d7609049e7fc0b54abb21"
     },
     "R/mod_a_load_tree.R": {
-      "checksum": "47ef7a12c37afd36c16edaffd0b11721"
+      "checksum": "0a37b7cb576db20b7ba21c0f976a99ce"
     },
     "R/mod_a_select_nodes.R": {
-      "checksum": "847b7f410f6456b2ebceb8ad6377fb04"
+      "checksum": "1baa192a21ebee8f0e6753bec2ebb5ab"
     },
     "R/mod_a_wizard.R": {
-      "checksum": "70ac42b9817b8fb6b61c81b01d22296c"
+      "checksum": "9af3a3a917371ed35d052c79cef4d69d"
     },
     "R/mod_b_analysis.R": {
       "checksum": "3bd50131f92fbb9d5fbbe535fb52108f"
@@ -1912,7 +1918,7 @@
       "checksum": "cb17eb24be1541d23c979a85e0ce3b5e"
     },
     "R/mod_b_data_source.R": {
-      "checksum": "453edea41fe4644b6b2d9089a0e91523"
+      "checksum": "0028f400402d0f47e61fb915d36eea16"
     },
     "R/mod_b_node_uncert.R": {
       "checksum": "d1dcd9b9bbd1fd296039fa55a222ea4d"
@@ -1924,25 +1930,25 @@
       "checksum": "0f510d1f0ff71a69651cac4f2df63e49"
     },
     "R/mod_b_viz.R": {
-      "checksum": "0b8d2f32963bddadce4c5e2db40d392c"
+      "checksum": "b142d4d43774c3192d118f2fc39c84a7"
     },
     "R/mod_shared_export.R": {
-      "checksum": "5f411f5ee964894d1c9d0bc5ad5d448e"
+      "checksum": "06ba5eaf9ab11cafcacf40089446c18c"
     },
     "R/mod_shared_i18n.R": {
-      "checksum": "019229c894b5afdeadd26b167d34d3b8"
+      "checksum": "15a9246dd98858f3ba2f6d1c6f09b0c7"
     },
     "R/mod_shared_theme.R": {
-      "checksum": "d2b3c08eab7586ffec9bd961304f0949"
+      "checksum": "a8a04a8e71b81ff33f015fb2f307b536"
     },
     "R/run_app.R": {
       "checksum": "329410c6c6a3e881d829b31e6c9eb427"
     },
     "R/translations.R": {
-      "checksum": "1f55849c200408b7705887cc7e4ceded"
+      "checksum": "0b1741ff8cb1da60880f2c963e12879d"
     },
     "R/utils_validate.R": {
-      "checksum": "d2265c68fac0a9ceb1aaac7660d76a34"
+      "checksum": "0bff2dea5b92ee9fec0dc6fa114fa56d"
     }
   },
   "users": null
