@@ -17,8 +17,6 @@ step3_ui <- function(ns, i18n, a) {
     return(htmltools::tagList(
       htmltools::tags$div(
         class = "step-block",
-        htmltools::tags$h2(class = "step-title", i18n$tr("step3_title")),
-        htmltools::tags$p(class = "step-hint", i18n$tr("step3_hint")),
         htmltools::tags$div(class = "alert alert-info app-alert", i18n$tr("a_need_nodes"))
       )
     ))
@@ -99,8 +97,6 @@ step3_ui <- function(ns, i18n, a) {
   htmltools::tagList(
     htmltools::tags$div(
       class = "step-block",
-      htmltools::tags$h2(class = "step-title", i18n$tr("step3_title")),
-      htmltools::tags$p(class = "step-hint", i18n$tr("step3_hint")),
       shiny::uiOutput(ns("calib_summary")),
       htmltools::tags$div(
         class = "calib-table",
@@ -116,8 +112,7 @@ step3_ui <- function(ns, i18n, a) {
           htmltools::tags$div(class = "calib-cell", role = "columnheader", i18n$tr("calib_col_status"))
         ),
         rows
-      ),
-      htmltools::tags$p(class = "form-hint", i18n$tr("step3_age_hint"))
+      )
     )
   )
 }
@@ -239,8 +234,8 @@ mod_a_calibration_table_server <- function(input, output, session, ns, state,
     if (!length(calibrated)) return(NULL)
     issues <- calibration_issues(calibrated, include_adv = FALSE)
     if (!length(issues)) {
-      return(htmltools::tags$div(
-        class = "alert alert-success app-alert", role = "status",
+      return(htmltools::tags$p(
+        class = "calib-summary-ok", role = "status",
         i18n$tr("calib_complete")
       ))
     }

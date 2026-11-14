@@ -125,8 +125,8 @@ plot_calibrated_tree <- function(phy, calibrated = list(), cols = plot_colors("p
                                  show_tip_label = TRUE, show_node_ids = TRUE) {
   cols <- cols %||% plot_colors("print")
   n_tip <- ape::Ntip(phy)
-  cex_tip <- if (n_tip > 200) 0.25 else if (n_tip > 100) 0.4 else if (n_tip > 50) 0.55 else if (n_tip > 20) 0.68 else 0.9
-  cex_node <- if (n_tip > 100) 0.5 else if (n_tip > 20) 0.65 else 0.8
+  cex_tip <- if (n_tip > 200) 0.3 else if (n_tip > 100) 0.45 else if (n_tip > 50) 0.6 else if (n_tip > 20) 0.78 else 0.95
+  cex_node <- if (n_tip > 100) 0.55 else if (n_tip > 20) 0.7 else 0.85
   pp <- ape::plot.phylo(
     phy,
     type = "phylogram",
@@ -138,8 +138,12 @@ plot_calibrated_tree <- function(phy, calibrated = list(), cols = plot_colors("p
     no.margin = FALSE
   )
   last_plot <- get("last_plot.phylo", envir = ape::.PlotPhyloEnv)
+  selected <- vapply(calibrated, function(x) as.integer(x$node), integer(1))
   if (isTRUE(show_node_ids)) {
     internal <- (n_tip + 1):(n_tip + ape::Nnode(phy))
+    # A selected node gets one highlighted label below; drawing the plain label
+    # too left a second digit under the marker.
+    internal <- setdiff(internal, selected)
     ape::nodelabels(
       node = internal,
       text = internal,
@@ -149,14 +153,13 @@ plot_calibrated_tree <- function(phy, calibrated = list(), cols = plot_colors("p
       adj = c(-0.15, 1.15)
     )
   }
-  selected <- vapply(calibrated, function(x) as.integer(x$node), integer(1))
   if (length(selected)) {
     ape::nodelabels(
       node = selected,
       pch = 21,
       bg = cols$highlight,
       col = cols$bg,
-      cex = 1.5
+      cex = 1.35
     )
     if (isTRUE(show_node_ids)) {
       ape::nodelabels(
@@ -166,7 +169,7 @@ plot_calibrated_tree <- function(phy, calibrated = list(), cols = plot_colors("p
         frame = "none",
         font = 2,
         col = cols$highlight,
-        adj = c(0.5, -0.7)
+        adj = c(-0.1, 1.4)
       )
     }
   }

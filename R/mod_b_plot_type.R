@@ -5,7 +5,7 @@ b_plot_type_panel_ui <- function(ns, i18n, b) {
   htmltools::tagList(
     shiny::selectInput(
       inputId = ns("plot_type"),
-      label = i18n$tr("b_plot_type"),
+      label = htmltools::tags$span(class = "visually-hidden", i18n$tr("b_plot_type")),
       choices = stats::setNames(
         c("phylogram", "cladogram", "distributions"),
         c(
@@ -24,8 +24,7 @@ b_plot_type_panel_ui <- function(ns, i18n, b) {
         inputId = ns("build_tree"),
         label = i18n$tr("b_build_tree"),
         value = isTRUE(params$build_tree)
-      ),
-      htmltools::tags$p(class = "form-hint", i18n$tr("b_build_tree_hint"))
+      )
     ),
     shiny::textInput(
       inputId = ns("all_nodes_raw"),
@@ -33,7 +32,6 @@ b_plot_type_panel_ui <- function(ns, i18n, b) {
       value = params$all_nodes_raw,
       placeholder = i18n$tr("b_all_nodes_hint"),
       width = "100%"
-    ),
-    htmltools::tags$p(class = "form-hint", i18n$tr("b_all_nodes_hint"))
+    )
   )
 }

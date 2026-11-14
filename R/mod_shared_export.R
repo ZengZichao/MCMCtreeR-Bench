@@ -56,12 +56,7 @@ export_controls_ui <- function(ns, i18n, values, prefix = "export") {
     shiny::conditionalPanel(
       condition = sprintf("input['%s'] === 'pdf'", ns(paste0(prefix, "_format"))),
       htmltools::tags$p(class = "form-hint", i18n$tr("pdf_print_note"))
-    ),
-    shiny::conditionalPanel(
-      condition = sprintf("input['%s'] !== 'pdf'", ns(paste0(prefix, "_format"))),
-      htmltools::tags$p(class = "form-hint", i18n$tr("export_colour_note"))
-    ),
-    htmltools::tags$p(class = "form-hint", i18n$tr("ascii_name_hint"))
+    )
   )
 }
 

@@ -36,7 +36,7 @@ test_that("module A completes the example workflow", {
       collapse = ""
     )
     expect_true(grepl("Node 8", results, fixed = TRUE))
-    expect_true(grepl("cauchy", results, fixed = TRUE))
+    expect_true(grepl("Cauchy", results, fixed = TRUE))
 
     session$setInputs(`a-go_step_6` = 1)
     session$flushReact()

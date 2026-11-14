@@ -17,23 +17,14 @@ app_mark_svg <- function() {
   )
 }
 
-hero_content <- function(eyebrow, title, lead, chips = character()) {
+hero_content <- function(eyebrow, title, lead = NULL) {
   htmltools::tagList(
-    htmltools::tags$p(
-      class = "hero-eyebrow",
-      htmltools::tags$span(class = "hero-dot", `aria-hidden` = "true"),
-      eyebrow
+    htmltools::tags$div(
+      class = "hero-title-block",
+      htmltools::tags$p(class = "hero-eyebrow", eyebrow),
+      htmltools::tags$h1(class = "hero-title", title)
     ),
-    htmltools::tags$h1(class = "hero-title", title),
-    htmltools::tags$p(class = "hero-lead", lead),
-    if (length(chips)) {
-      htmltools::tags$div(
-        class = "hero-meta",
-        lapply(chips, function(chip) {
-          htmltools::tags$span(class = "hero-chip", chip)
-        })
-      )
-    }
+    if (!is.null(lead)) htmltools::tags$p(class = "hero-lead", lead)
   )
 }
 
@@ -49,10 +40,8 @@ app_ui <- function(request) {
     ),
     theme = app_theme(),
     fillable = FALSE,
-    window_title = "MCMCtreeR Bench | Priors and time trees",
+    window_title = "MCMCtreeR Bench",
     navbar_options = bslib::navbar_options(
-      bg = "#000000",
-      theme = "dark",
       underline = FALSE
     ),
     bslib::nav_panel(
@@ -92,7 +81,7 @@ app_ui <- function(request) {
         href = paste0(
           "data:image/svg+xml,",
           "%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E",
-          "%3Crect width='24' height='24' rx='5' fill='%230066cc'/%3E",
+          "%3Crect width='24' height='24' fill='%230090ff'/%3E",
           "%3Cpath d='M12 19v-4M12 15 7 11V7M12 15l5-4V7' stroke='white' stroke-width='1.8' stroke-linecap='round'/%3E",
           "%3Ccircle cx='7' cy='6' r='1.7' fill='white'/%3E",
           "%3Ccircle cx='17' cy='6' r='1.7' fill='white'/%3E",
@@ -134,11 +123,12 @@ about_page_ui <- function(i18n) {
       label
     )
   }
-  detail_link <- function(href, label) {
+  detail_link <- function(href, label, title = NULL) {
     htmltools::tags$a(
       href = href,
       target = "_blank",
       rel = "noopener noreferrer",
+      title = title,
       label
     )
   }
@@ -149,13 +139,9 @@ about_page_ui <- function(i18n) {
       htmltools::tags$div(
         class = "hero-inner",
         hero_content(
-          eyebrow = i18n$tr("app_title"),
+          eyebrow = i18n$tr("about_eyebrow"),
           title = i18n$tr("about_title"),
-          lead = i18n$tr("about_lead"),
-          chips = c(
-            paste0("v", app_version()),
-            paste(i18n$tr("lang_en"), "/", i18n$tr("lang_zh"))
-          )
+          lead = i18n$tr("about_lead")
         )
       )
     ),
@@ -166,7 +152,7 @@ about_page_ui <- function(i18n) {
         htmltools::tags$div(
           class = "about-grid",
           htmltools::tags$article(
-            class = "surface-card about-card about-card--main",
+            class = "about-card about-card--main",
             htmltools::tags$h2(
               class = "about-card-title",
               i18n$tr("footer_project")
@@ -187,39 +173,18 @@ about_page_ui <- function(i18n) {
               htmltools::tags$dt(i18n$tr("license_label")),
               htmltools::tags$dd(GUI_META$license),
               htmltools::tags$dt(i18n$tr("upstream_label")),
-              htmltools::tags$dd(detail_link(UPSTREAM$repo, paste0(
-                UPSTREAM$package, " @ ", UPSTREAM$commit
-              )))
+              htmltools::tags$dd(detail_link(
+                UPSTREAM$repo,
+                paste0(UPSTREAM$package, " @ ", substr(UPSTREAM$commit, 1, 7)),
+                title = paste0("Commit ", UPSTREAM$commit)
+              ))
             ),
             htmltools::tags$p(
               class = "about-note",
               i18n$tr("footer_upstream")
-            )
-          ),
-          htmltools::tags$div(
-            class = "about-side",
-            htmltools::tags$section(
-              class = "surface-card about-card",
-              htmltools::tags$h2(
-                class = "about-card-title",
-                i18n$tr("footer_resources")
-              ),
-              htmltools::tags$nav(
-                class = "about-links",
-                `aria-label` = i18n$tr("footer_resources"),
-                modal_link("footer_privacy", i18n$tr("footer_privacy")),
-                modal_link("footer_local", i18n$tr("footer_local")),
-                modal_link("footer_cite", i18n$tr("footer_cite")),
-                external_link(GUI_META$repo, i18n$tr("footer_source")),
-                external_link(orcid_url(), i18n$tr("footer_orcid"))
-              ),
-              htmltools::tags$p(
-                class = "about-note",
-                i18n$tr("privacy_short")
-              )
             ),
             htmltools::tags$section(
-              class = "surface-card about-card",
+              class = "about-cite",
               htmltools::tags$h2(
                 class = "about-card-title",
                 i18n$tr("cite_title")
@@ -240,6 +205,28 @@ about_page_ui <- function(i18n) {
               htmltools::tags$pre(
                 class = "code-block",
                 upstream_citation_text()
+              )
+            )
+          ),
+          htmltools::tags$div(
+            class = "about-side",
+            htmltools::tags$section(
+              class = "about-card",
+              htmltools::tags$h2(
+                class = "about-card-title",
+                i18n$tr("footer_resources")
+              ),
+              htmltools::tags$nav(
+                class = "about-links",
+                `aria-label` = i18n$tr("footer_resources"),
+                modal_link("footer_privacy", i18n$tr("footer_privacy")),
+                modal_link("footer_local", i18n$tr("footer_local")),
+                modal_link("footer_cite", i18n$tr("footer_cite")),
+                external_link(GUI_META$repo, i18n$tr("footer_source"))
+              ),
+              htmltools::tags$p(
+                class = "about-note",
+                i18n$tr("privacy_short")
               )
             )
           )

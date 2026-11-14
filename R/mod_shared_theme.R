@@ -6,39 +6,21 @@
 
 mod_theme_ui <- function(id, i18n = NULL, plot_theme = "match", mode = "light") {
   ns <- shiny::NS(id)
-  label <- function(key, fallback) {
-    if (is.null(i18n)) fallback else i18n$tr(key)
-  }
   if (!isTRUE(mode %in% c("light", "dark"))) mode <- "light"
-  choices <- stats::setNames(
-    c("match", "print"),
-    c(
-      label("theme_plot_match", "Match interface"),
-      label("theme_plot_print", "Print (white)")
-    )
-  )
+  # The interface owns the light/dark switch. Plot colours are decided where
+  # figures are exported, not in the global masthead.
   shiny::tags$div(
     class = "theme-switch",
-    bslib::input_dark_mode(id = ns("theme_mode"), mode = mode),
-    shiny::selectInput(
-      inputId = ns("plot_theme"),
-      label = htmltools::tags$span(
-        class = "visually-hidden",
-        label("theme_preview_label", "Preview colours")
-      ),
-      choices = choices,
-      selected = plot_theme,
-      width = "auto",
-      selectize = FALSE
-    )
+    bslib::input_dark_mode(id = ns("theme_mode"), mode = mode)
   )
 }
 
-mod_theme_server <- function(id) {
+mod_theme_server <- function(id, default_mode = "light") {
   shiny::moduleServer(id, function(input, output, session) {
+    if (!isTRUE(default_mode %in% c("light", "dark"))) default_mode <- "light"
     mode <- shiny::reactive({
-      value <- input$theme_mode %||% "light"
-      if (value %in% c("light", "dark")) value else "light"
+      value <- input$theme_mode %||% default_mode
+      if (value %in% c("light", "dark")) value else default_mode
     })
 
     plot_theme <- shiny::reactiveVal("match")

@@ -18,7 +18,7 @@ mod_a_ui <- function(id) {
         htmltools::tags$div(
           class = "workbench-grid",
           htmltools::tags$aside(
-            class = "step-nav surface-card",
+            class = "step-nav",
             htmltools::tags$h2(
               class = "rail-title",
               shiny::uiOutput(ns("step_nav_title"), inline = TRUE)
@@ -26,12 +26,12 @@ mod_a_ui <- function(id) {
             shiny::uiOutput(ns("step_nav"))
           ),
           htmltools::tags$main(
-            class = "step-main surface-card",
+            class = "step-main",
             shiny::uiOutput(ns("step_content")),
             shiny::uiOutput(ns("step_footer"))
           ),
           htmltools::tags$aside(
-            class = "a-preview surface-card",
+            class = "a-preview",
             htmltools::tags$h2(
               class = "preview-title",
               shiny::uiOutput(ns("preview_title"), inline = TRUE)
@@ -42,7 +42,7 @@ mod_a_ui <- function(id) {
               shiny::plotOutput(
                 outputId = ns("tree_plot"),
                 click = ns("tree_plot_click"),
-                height = "330px"
+                height = "420px"
               )
             ),
             shiny::uiOutput(ns("preview_empty"))
@@ -57,6 +57,13 @@ step_titles <- function() {
   c(
     "step1_title", "step2_title", "step3_title",
     "step4_title", "step5_title", "step6_title"
+  )
+}
+
+step_hints <- function() {
+  c(
+    "step1_hint", "step2_hint", "step3_hint",
+    "step4_hint", "step5_hint", "step6_hint"
   )
 }
 
@@ -168,11 +175,16 @@ mod_a_server <- function(id, state, set_a, ui_prefs) {
       i18n$tr(key)
     })
     output$hero <- shiny::renderUI({
+      i18n$lang()
+      a_revision()
+      a <- shiny::isolate(state$a)
+      step <- as.integer(a$step)
+      # The rail names every step, so the header carries progress, the step title
+      # and the one-line promise of what this step asks for.
       hero_content(
-        eyebrow = i18n$tr("app_title"),
-        title = i18n$tr("a_hero_title"),
-        lead = i18n$tr("a_hero_lead"),
-        chips = c("Newick", "Nexus", "MCMCtree")
+        eyebrow = i18n$tr("step_counter", step),
+        title = i18n$tr(step_titles()[step]),
+        lead = i18n$tr(step_hints()[step])
       )
     })
 
@@ -180,6 +192,9 @@ mod_a_server <- function(id, state, set_a, ui_prefs) {
       i18n$lang()
       a_revision()
       a <- shiny::isolate(state$a)
+      # Nothing is clickable before a tree exists; the empty rail says so and
+      # carries no dead controls.
+      if (is.null(a$phy)) return(NULL)
       view <- a$view %||% list(show_node_ids = TRUE, show_tip_labels = TRUE)
       disabled <- is.null(a$phy)
       htmltools::tags$div(
@@ -300,14 +315,29 @@ mod_a_server <- function(id, state, set_a, ui_prefs) {
           disabled = if (prev_enabled) NULL else "disabled",
           i18n$tr("step_prev")
         ),
-        htmltools::tags$button(
-          id = ns("step_next"),
-          type = "button",
-          class = "btn btn-primary action-button",
-          disabled = if (next_enabled) NULL else "disabled",
-          title = if (!is.null(next_hint)) i18n$tr(next_hint) else NULL,
-          i18n$tr("step_next")
-        )
+        # The last step ends in the download, so it has no next button to
+        # disable. Earlier steps put the reason next to the button instead of
+        # hiding it in a hover-only title.
+        if (step < 6) {
+          htmltools::tags$div(
+            class = "step-footer-next",
+            if (!is.null(next_hint)) {
+              htmltools::tags$p(
+                id = ns("step_next_hint"),
+                class = "step-hint step-next-hint",
+                i18n$tr(next_hint)
+              )
+            },
+            htmltools::tags$button(
+              id = ns("step_next"),
+              type = "button",
+              class = "btn btn-primary action-button",
+              disabled = if (next_enabled) NULL else "disabled",
+              `aria-describedby` = if (!is.null(next_hint)) ns("step_next_hint") else NULL,
+              i18n$tr("step_next")
+            )
+          )
+        }
       )
     })
 
@@ -355,6 +385,16 @@ mod_a_server <- function(id, state, set_a, ui_prefs) {
         a_add_node(state, set_a, bump, i18n, hit$node)
       }
     })
+
+    # This is the default panel, but it can also be re-entered after a language
+    # or theme change while another tab is open. Rendering the shell up front
+    # keeps a tab return from landing on a half-empty wizard.
+    for (name in c(
+      "step_nav_title", "preview_title", "hero", "preview_controls",
+      "preview_empty", "step_nav", "step_content", "step_footer", "tree_plot"
+    )) {
+      shiny::outputOptions(output, name, suspendWhenHidden = FALSE)
+    }
 
     invisible(list(stale = stale, step_enabled = step_enabled))
   })

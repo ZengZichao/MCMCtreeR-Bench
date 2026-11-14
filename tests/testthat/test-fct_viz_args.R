@@ -173,3 +173,15 @@ test_that("UI-only parameters are removed from the plot state", {
   expect_false("plot_height_in" %in% names(cleaned))
   expect_true("plot_type" %in% names(cleaned))
 })
+
+test_that("tip label size keeps small trees readable", {
+  # Small trees have room for a full-size line per tip; only crowded trees
+  # shrink. This locks the default and the tier boundaries.
+  expect_identical(viz_defaults()$cex_tips, 0.9)
+  expect_identical(viz_auto_tip_cex(7), 1)
+  expect_identical(viz_auto_tip_cex(20), 1)
+  expect_identical(viz_auto_tip_cex(40), 0.75)
+  expect_identical(viz_auto_tip_cex(80), 0.62)
+  expect_identical(viz_auto_tip_cex(120), 0.5)
+  expect_identical(viz_auto_tip_cex(300), 0.32)
+})

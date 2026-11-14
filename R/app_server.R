@@ -53,6 +53,8 @@ app_server <- function(input, output, session) {
   )
   query_lang <- query$lang
   if (!is.null(query_lang) && !query_lang %in% c("zh", "en")) query_lang <- NULL
+  query_theme <- query$theme
+  if (!is.null(query_theme) && !query_theme %in% c("light", "dark")) query_theme <- NULL
 
   ui_prefs <- list(
     i18n = mod_i18n_server(
@@ -60,7 +62,7 @@ app_server <- function(input, output, session) {
       default = query_lang %||% "en",
       lock_default = !is.null(query_lang)
     ),
-    theme = mod_theme_server("theme")
+    theme = mod_theme_server("theme", default_mode = query_theme %||% "light")
   )
 
   mod_a_server("a", state = state, set_a = set_a, ui_prefs = ui_prefs)
@@ -83,11 +85,18 @@ app_server <- function(input, output, session) {
     mod_theme_ui(
       "theme",
       i18n = ui_prefs$i18n,
-      plot_theme = shiny::isolate(ui_prefs$theme$plot_theme()),
       mode = shiny::isolate(ui_prefs$theme$mode())
     )
   })
+  # On narrow screens the whole tab strip sits inside a collapsed menu; without
+  # this the three labels stay blank the first time the menu is opened.
+  for (name in c("nav_a_title", "nav_b_title", "nav_about_title", "nav_theme")) {
+    shiny::outputOptions(output, name, suspendWhenHidden = FALSE)
+  }
   output$about_page <- shiny::renderUI(about_page_ui(ui_prefs$i18n))
+  # The About tab is pure static content. It must not wait for a tab-shown
+  # event that a slow first paint can drop, or the tab opens blank.
+  shiny::outputOptions(output, "about_page", suspendWhenHidden = FALSE)
 
   show_privacy <- function() {
     if (!is.null(shiny::getDefaultReactiveDomain())) {

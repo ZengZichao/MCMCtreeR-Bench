@@ -10,48 +10,48 @@ plot_colors <- function(theme = c("light", "dark", "print")) {
     theme,
     print = list(
       theme = "print",
-      bg = "#FFFFFF",
-      fg = "#000000",
-      muted = "#4A4A4A",
-      grid = "#D9D9D9",
-      highlight = "#0066CC",
-      accent = "#B00020",
-      success = "#1B7A32",
-      warning = "#7A5C00",
-      density_fill = "#00000050",
-      density_border = "#00000080",
-      tip_bar = "#0066CC33",
-      bar = "#0066CC"
+      bg = "#fcfcfc",
+      fg = "#202020",
+      muted = "#646464",
+      grid = "#e0e0e0",
+      highlight = "#0d74ce",
+      accent = "#ce2c31",
+      success = "#218358",
+      warning = "#ab6400",
+      density_fill = "#0090ff33",
+      density_border = "#0090ff80",
+      tip_bar = "#0090ff33",
+      bar = "#0090ff"
     ),
     light = list(
       theme = "light",
-      bg = "#FFFFFF",
-      fg = "#1D1D1F",
-      muted = "#6E6E73",
-      grid = "#E8E8ED",
-      highlight = "#0066CC",
-      accent = "#D70015",
-      success = "#248A3D",
-      warning = "#8A6D00",
-      density_fill = "#0066CC33",
-      density_border = "#0066CC80",
-      tip_bar = "#0066CC40",
-      bar = "#0066CC"
+      bg = "#fcfcfc",
+      fg = "#202020",
+      muted = "#646464",
+      grid = "#e0e0e0",
+      highlight = "#0d74ce",
+      accent = "#ce2c31",
+      success = "#218358",
+      warning = "#ab6400",
+      density_fill = "#0090ff33",
+      density_border = "#0090ff80",
+      tip_bar = "#0090ff40",
+      bar = "#0090ff"
     ),
     dark = list(
       theme = "dark",
-      bg = "#171719",
-      fg = "#F5F5F7",
-      muted = "#A1A1A6",
-      grid = "#3A3A3C",
-      highlight = "#2997FF",
-      accent = "#FF6961",
-      success = "#30D158",
-      warning = "#FFD60A",
-      density_fill = "#2997FF44",
-      density_border = "#2997FF99",
-      tip_bar = "#2997FF55",
-      bar = "#2997FF"
+      bg = "#111111",
+      fg = "#eeeeee",
+      muted = "#b4b4b4",
+      grid = "#3a3a3a",
+      highlight = "#70b8ff",
+      accent = "#ff9592",
+      success = "#3dd68c",
+      warning = "#ffca16",
+      density_fill = "#70b8ff44",
+      density_border = "#70b8ff99",
+      tip_bar = "#70b8ff55",
+      bar = "#70b8ff"
     )
   )
 }
@@ -85,7 +85,8 @@ with_plot_theme <- function(cols, expr) {
     col.axis = cols$fg,
     col.lab = cols$fg,
     col.main = cols$fg,
-    col.sub = cols$fg
+    col.sub = cols$fg,
+    mar = c(5, 4, 3, 6.5)
   )
   force(expr)
 }
@@ -105,9 +106,9 @@ with_mcmctree_timescale <- function(cols, expr) {
   old <- lapply(palette_names, get, envir = ns)
   names(old) <- palette_names
   band_cols <- if (identical(cols$theme, "dark")) {
-    c("#3a3a3c", "#2a2a2c", "#48484a", "#323234")
+    c("#141414", "#121212", "#161616", "#181818")
   } else {
-    c("#e8e8ed", "#f2f2f4", "#dcdce1", "#fafafc")
+    c("#fcfcfc", "#fafafa", "#f7f7f7", "#f4f4f4")
   }
   for (nm in palette_names) {
     original <- old[[nm]]
@@ -131,7 +132,8 @@ with_mcmctree_timescale <- function(cols, expr) {
 
 # Quiet empty state: a line-art phylogeny watermarked at the centre of the
 # canvas. The wording lives in the DOM above it, so nothing is drawn as text
-# here and the placeholder stays translatable.
+# here and the placeholder stays translatable. Strokes are hairlines to match
+# the interface rules.
 plot_empty_state <- function(cols) {
   cols <- cols %||% plot_colors("print")
   graphics::plot.new()

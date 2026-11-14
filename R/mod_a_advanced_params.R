@@ -10,8 +10,6 @@ step4_ui <- function(ns, i18n, a) {
     return(htmltools::tagList(
       htmltools::tags$div(
         class = "step-block",
-        htmltools::tags$h2(class = "step-title", i18n$tr("step4_title")),
-        htmltools::tags$p(class = "step-hint", i18n$tr("step4_hint")),
         htmltools::tags$div(class = "alert alert-info app-alert", i18n$tr("a_need_nodes"))
       )
     ))
@@ -76,12 +74,10 @@ step4_ui <- function(ns, i18n, a) {
       open = if (has_values || has_errors) "" else NULL,
       htmltools::tags$summary(
         class = "adv-card-head",
-        htmltools::tags$h4(i18n$tr("adv_for_node", node, one$method)),
-        htmltools::tags$p(class = "form-hint", i18n$tr(paste0("method_", one$method, "_desc")))
+        htmltools::tags$h4(
+          i18n$tr("adv_for_node", node, method_label(one$method))
+        )
       ),
-      if (identical(one$method, "gamma")) {
-        htmltools::tags$p(class = "form-hint", i18n$tr("estimate_gamma_note"))
-      },
       htmltools::tags$div(class = "adv-grid", fields)
     )
   })
@@ -89,8 +85,7 @@ step4_ui <- function(ns, i18n, a) {
   htmltools::tagList(
     htmltools::tags$div(
       class = "step-block",
-      htmltools::tags$h2(class = "step-title", i18n$tr("step4_title")),
-      htmltools::tags$p(class = "step-hint", i18n$tr("step4_hint")),
+      htmltools::tags$p(class = "form-hint step-hint", i18n$tr("step4_hint")),
       cards
     )
   )

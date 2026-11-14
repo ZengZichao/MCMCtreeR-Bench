@@ -14,7 +14,11 @@ app_error <- function(key, ..., detail = NULL) {
 
 is_app_error <- function(x) inherits(x, "mcmctreer_error")
 
+# bslib::input_task_button reports {value, autoReset} while a plain actionButton
+# reports a numeric click count; both count as one click when the counter is
+# positive. Testing only the numeric shape silently disabled every task button.
 is_button_click <- function(value) {
+  if (is.list(value)) value <- value$value
   if (is.null(value) || length(value) != 1) return(FALSE)
   value <- suppressWarnings(as.numeric(value))
   is.finite(value) && value > 0

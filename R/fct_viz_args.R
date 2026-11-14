@@ -17,15 +17,15 @@ viz_defaults <- function() {
     tip_lengths = FALSE,
     density_col = "",
     density_border_col = "",
-    cex_tips = 0.7,
+    cex_tips = 0.9,
     show_tip_label = TRUE,
     col_tree = "",
     tip_color = "",
     lwd_bar = 1,
-    grey_bars = TRUE,
-    cex_age = 0.8,
-    cex_labels = 0.8,
-    cex_names = 0.8,
+    grey_bars = FALSE,
+    cex_age = 0.9,
+    cex_labels = 0.9,
+    cex_names = 0.9,
     relative_height = 0.08,
     tip_bar_col = "",
     burn_in = 0.25,
@@ -51,8 +51,10 @@ viz_ui_only_names <- function() {
 
 viz_auto_tip_cex <- function(n_tip) {
   n_tip <- as.numeric(n_tip)
-  if (!is.finite(n_tip) || n_tip <= 0) return(0.7)
-  if (n_tip > 200) 0.3 else if (n_tip > 150) 0.36 else if (n_tip > 100) 0.42 else if (n_tip > 60) 0.5 else if (n_tip > 30) 0.6 else 0.7
+  if (!is.finite(n_tip) || n_tip <= 0) return(0.9)
+  # A small tree has room for readable labels; the tiers only shrink when the
+  # canvas can no longer seat a full-size line per tip.
+  if (n_tip > 200) 0.32 else if (n_tip > 150) 0.4 else if (n_tip > 100) 0.5 else if (n_tip > 60) 0.62 else if (n_tip > 30) 0.75 else if (n_tip > 20) 0.9 else 1
 }
 
 viz_auto_plot_height <- function(n_tip) {

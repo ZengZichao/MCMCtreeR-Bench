@@ -38,21 +38,33 @@ app_custom_css <- function() {
 }
 
 app_theme <- function() {
-  # Tokens follow the Apple design analysis: one Action Blue accent, near-black
-  # ink, parchment canvas, and SF Pro resolved through the system font stack.
+  # Radix UI Colors, light steps. The interface CSS owns the full token set and
+  # the dark scale; these values seed Bootstrap so components outside the sheet
+  # (native controls, validation states) stay on the same palette.
   theme <- bslib::bs_theme(
     version = 5,
-    primary = "#0066cc",
-    secondary = "#6e6e73",
-    success = "#248a3d",
-    info = "#0066cc",
-    warning = "#8a6d00",
-    danger = "#d70015",
-    bg = "#ffffff",
-    fg = "#1d1d1f",
-    base_font = "'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Inter, system-ui, sans-serif",
-    heading_font = "'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Inter, system-ui, sans-serif",
-    code_font = "'SF Mono', SFMono-Regular, ui-monospace, Menlo, Consolas, monospace"
+    primary = "#0090ff",
+    secondary = "#646464",
+    success = "#218358",
+    info = "#0d74ce",
+    warning = "#ab6400",
+    danger = "#ce2c31",
+    bg = "#fcfcfc",
+    fg = "#202020",
+    base_font = paste(
+      "-apple-system", "BlinkMacSystemFont", "\"Segoe UI\"", "\"Helvetica Neue\"",
+      "\"PingFang SC\"", "\"Noto Sans CJK SC\"", "Inter", "sans-serif",
+      sep = ", "
+    ),
+    heading_font = paste(
+      "\"Bodoni 72\"", "\"Playfair Display\"", "\"Iowan Old Style\"",
+      "\"Songti SC\"", "\"Noto Serif CJK SC\"", "Georgia", "serif",
+      sep = ", "
+    ),
+    code_font = paste(
+      "\"SF Mono\"", "SFMono-Regular", "ui-monospace", "Menlo", "monospace",
+      sep = ", "
+    )
   )
   # Bundling the rules into the theme keeps them after Bootstrap in the cascade,
   # so component overrides do not depend on stylesheet load order.

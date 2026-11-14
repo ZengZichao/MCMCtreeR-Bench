@@ -34,8 +34,6 @@ step5_ui <- function(ns, i18n, a) {
     return(htmltools::tagList(
       htmltools::tags$div(
         class = "step-block",
-        htmltools::tags$h2(class = "step-title", i18n$tr("step5_title")),
-        htmltools::tags$p(class = "step-hint", i18n$tr("step5_hint")),
         htmltools::tags$div(class = "alert alert-info app-alert", i18n$tr("a_need_tree"))
       )
     ))
@@ -44,8 +42,6 @@ step5_ui <- function(ns, i18n, a) {
   htmltools::tagList(
     htmltools::tags$div(
       class = "step-block",
-      htmltools::tags$h2(class = "step-title", i18n$tr("step5_title")),
-      htmltools::tags$p(class = "step-hint", i18n$tr("step5_hint")),
       shiny::uiOutput(ns("estimate_stale")),
       shiny::uiOutput(ns("estimate_error_alert")),
       bslib::input_task_button(
@@ -53,9 +49,6 @@ step5_ui <- function(ns, i18n, a) {
         label = i18n$tr("estimate_run"),
         type = "primary"
       ),
-      if (any(vapply(a$calibrated, function(one) identical(one$method, "gamma"), logical(1)))) {
-        htmltools::tags$p(class = "form-hint", i18n$tr("estimate_gamma_note"))
-      },
       shiny::uiOutput(ns("estimate_results"))
     )
   )
@@ -134,7 +127,11 @@ mod_a_estimate_server <- function(input, output, session, ns, state, set_a,
             current$nodes[[idx]],
             cols = cols,
             cex = 0.9,
-            title = i18n$tr("plot_node_title", node, current$nodes[[idx]]$method)
+            title = i18n$tr(
+              "plot_node_title",
+              node,
+              method_label(current$nodes[[idx]]$method)
+            )
           ))
         }, bg = "transparent", height = 230)
       })
@@ -165,12 +162,7 @@ mod_a_estimate_server <- function(input, output, session, ns, state, set_a,
 
   output$estimate_results <- shiny::renderUI({
     results <- state$a$results
-    if (is.null(results)) {
-      return(htmltools::tags$div(
-        class = "empty-state",
-        htmltools::tags$p(i18n$tr("estimate_no_results"))
-      ))
-    }
+    if (is.null(results)) return(NULL)
 
     warnings <- results$warning_class$known %||% character()
     cards <- lapply(results$nodes, function(one) {
@@ -179,9 +171,8 @@ mod_a_estimate_server <- function(input, output, session, ns, state, set_a,
         class = "result-card",
         htmltools::tags$div(
           class = "result-head",
-          htmltools::tags$h4(paste0(
-            i18n$tr("estimate_node", node), " \u00b7 ", one$method
-          )),
+          htmltools::tags$h4(i18n$tr("estimate_node", node)),
+          htmltools::tags$span(class = "result-method", method_label(one$method)),
           htmltools::tags$span(
             class = "result-tips",
             i18n$tr("selected_tips_count", length(one$tips))
@@ -198,7 +189,6 @@ mod_a_estimate_server <- function(input, output, session, ns, state, set_a,
         i18n$tr("estimate_known_warnings")
       ),
       htmltools::tags$h3(i18n$tr("estimate_results")),
-      htmltools::tags$p(class = "form-hint", i18n$tr("estimate_param_note")),
       cards
     )
   })

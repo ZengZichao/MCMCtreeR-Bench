@@ -32,10 +32,6 @@ b_data_source_panel_ui <- function(ns, i18n, b) {
         inline = TRUE
       ),
       shiny::conditionalPanel(
-        condition = sprintf("input['%s'] === 'example'", ns("source_mode")),
-        htmltools::tags$p(class = "form-hint", i18n$tr("b_example_hint"))
-      ),
-      shiny::conditionalPanel(
         condition = sprintf("input['%s'] === 'figtree'", ns("source_mode")),
         shiny::fileInput(
           inputId = ns("figtree_file"),
@@ -65,8 +61,7 @@ b_data_source_panel_ui <- function(ns, i18n, b) {
           placeholder = i18n$tr("upload_none"),
           width = "100%"
         ),
-        htmltools::tags$p(class = "form-hint", i18n$tr("b_chain_hint")),
-        htmltools::tags$p(class = "form-hint", i18n$tr("b_build_tree_hint"))
+        htmltools::tags$p(class = "form-hint", i18n$tr("b_chain_hint"))
       )
     ),
     shiny::conditionalPanel(
@@ -402,7 +397,6 @@ mod_b_data_source_server <- function(input, output, session, ns, state, set_b,
       b$analysis_type <- analysis
       b$source_report <- list(ok = FALSE, error = fmt)
       set_b(b)
-      user_notification(error_text(fmt), type = "error", duration = 9)
       return()
     }
 
@@ -488,7 +482,7 @@ mod_b_data_source_server <- function(input, output, session, ns, state, set_b,
   output$source_status <- shiny::renderUI({
     report <- state$b$source_report
     if (is.null(report)) {
-      return(htmltools::tags$p(class = "form-hint", i18n$tr("b_source_not_ready")))
+      return(NULL)
     }
     if (!isTRUE(report$ok)) {
       fmt <- report$error %||% list(text = i18n$tr("err_parse_tree"), detail = NULL)
@@ -500,38 +494,8 @@ mod_b_data_source_server <- function(input, output, session, ns, state, set_b,
       ))
     }
 
-    kind_label <- if (isTRUE(report$example)) {
-      i18n$tr("b_source_example")
-    } else {
-      switch(
-        report$kind,
-        figtree = i18n$tr("b_source_figtree"),
-        posterior = i18n$tr("b_source_posterior"),
-        mrbayes = i18n$tr("b_analysis_mrbayes"),
-        revbayes = i18n$tr("b_analysis_revbayes"),
-        user = i18n$tr("b_analysis_user"),
-        report$kind
-      )
-    }
-
-    items <- list(
-      htmltools::tags$li(i18n$tr("b_source_summary", report$n_tip, report$n_node))
-    )
-    if (!is.null(report$n_rows) && !is.na(report$n_rows)) {
-      items <- c(items, list(htmltools::tags$li(i18n$tr("b_source_rows", report$n_rows))))
-    }
-    if (!is.null(report$n_nodes) && !is.na(report$n_nodes)) {
-      items <- c(items, list(htmltools::tags$li(i18n$tr("b_source_nodes", report$n_nodes))))
-    }
-    if (!is.null(report$n_runs) && !is.na(report$n_runs)) {
-      items <- c(items, list(htmltools::tags$li(i18n$tr("b_source_runs", report$n_runs))))
-    }
-
-    htmltools::tags$div(
-      class = "alert alert-success app-alert", role = "status",
-      htmltools::tags$strong(i18n$tr("msg_source_ready")),
-      htmltools::tags$p(kind_label),
-      htmltools::tags$ul(items)
-    )
+    # A successful load is reported once, in the stage meta beside the figure.
+    # The rail keeps only errors, so the same counts are not printed twice.
+    NULL
   })
 }

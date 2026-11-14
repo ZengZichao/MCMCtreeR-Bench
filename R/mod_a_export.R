@@ -5,8 +5,6 @@ step6_ui <- function(ns, i18n, a) {
     return(htmltools::tagList(
       htmltools::tags$div(
         class = "step-block",
-        htmltools::tags$h2(class = "step-title", i18n$tr("step6_title")),
-        htmltools::tags$p(class = "step-hint", i18n$tr("step6_hint")),
         htmltools::tags$div(class = "alert alert-info app-alert", i18n$tr("export_no_results"))
       )
     ))
@@ -14,18 +12,30 @@ step6_ui <- function(ns, i18n, a) {
 
   htmltools::tagList(
     htmltools::tags$div(
-      class = "step-block",
-      htmltools::tags$h2(class = "step-title", i18n$tr("step6_title")),
-      htmltools::tags$p(class = "step-hint", i18n$tr("step6_hint")),
+      class = "step-block step-block--wide",
       shiny::uiOutput(ns("export_stale")),
       shiny::uiOutput(ns("export_actions")),
-      htmltools::tags$h3(i18n$tr("export_tree_preview")),
+      htmltools::tags$div(
+        class = "export-preview-head",
+        htmltools::tags$h3(i18n$tr("export_tree_preview")),
+        htmltools::tags$div(
+          class = "preview-controls preview-controls--inline",
+          shiny::checkboxInput(
+            inputId = ns("export_show_node_ids"),
+            label = i18n$tr("show_node_ids"),
+            value = isTRUE((a$view %||% list())$show_node_ids %||% TRUE)
+          ),
+          shiny::checkboxInput(
+            inputId = ns("export_show_tip_labels"),
+            label = i18n$tr("show_tip_labels"),
+            value = isTRUE((a$view %||% list())$show_tip_labels %||% TRUE)
+          )
+        )
+      ),
       shiny::plotOutput(ns("result_tree"), height = "420px"),
       htmltools::tags$h3(i18n$tr("export_tre_preview")),
-      htmltools::tags$p(class = "form-hint", i18n$tr("export_tre_hint")),
       shiny::uiOutput(ns("tre_preview")),
       htmltools::tags$h3(i18n$tr("export_summary")),
-      htmltools::tags$p(class = "form-hint", i18n$tr("estimate_param_note")),
       shiny::uiOutput(ns("summary_table")),
       htmltools::tags$h3(i18n$tr("export_distributions")),
       htmltools::tags$p(class = "form-hint", i18n$tr("export_distributions_hint")),
@@ -54,6 +64,27 @@ mod_a_export_server <- function(input, output, session, ns, state, set_a,
       },
       ignoreNULL = FALSE
     )
+
+  # The persistent preview rail is hidden on this step, so the same two view
+  # controls live beside the full-size calibrated tree instead.
+  shiny::observeEvent(
+    list(input$export_show_node_ids, input$export_show_tip_labels),
+    {
+      if (is.null(input$export_show_node_ids) &&
+          is.null(input$export_show_tip_labels)) {
+        return()
+      }
+      a <- state$a
+      view <- a$view %||% list(show_node_ids = TRUE, show_tip_labels = TRUE)
+      view$show_node_ids <- isTRUE(input$export_show_node_ids %||% view$show_node_ids)
+      view$show_tip_labels <- isTRUE(input$export_show_tip_labels %||% view$show_tip_labels)
+      if (!identical(view, a$view)) {
+        a$view <- view
+        set_a(a)
+      }
+    },
+    ignoreNULL = FALSE
+  )
 
   output$export_stale <- shiny::renderUI({
     if (is.null(state$a$results)) return(NULL)
@@ -124,8 +155,7 @@ mod_a_export_server <- function(input, output, session, ns, state, set_a,
           `data-copied` = i18n$tr("copied"),
           `aria-live` = "polite",
           i18n$tr("btn_copy_tre")
-        ),
-        htmltools::tags$p(class = "form-hint", i18n$tr("copy_help"))
+        )
       )
     )
   })
@@ -164,7 +194,7 @@ mod_a_export_server <- function(input, output, session, ns, state, set_a,
         lapply(seq_len(nrow(summary)), function(i) {
           htmltools::tags$tr(
             htmltools::tags$td(summary$node[i]),
-            htmltools::tags$td(summary$method[i]),
+            htmltools::tags$td(method_label(summary$method[i])),
             htmltools::tags$td(summary$parameters[i])
           )
         })

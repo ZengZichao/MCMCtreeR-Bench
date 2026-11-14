@@ -17,6 +17,7 @@ mod_b_ui <- function(id) {
           bslib::layout_sidebar(
             sidebar = bslib::sidebar(
               width = 380,
+              open = "always",
               padding = 0,
               gap = 0,
               class = "b-sidebar",
@@ -130,10 +131,9 @@ mod_b_server <- function(id, state, set_b, ui_prefs) {
 
     output$hero <- shiny::renderUI({
       hero_content(
-        eyebrow = i18n$tr("app_title"),
+        eyebrow = i18n$tr("b_eyebrow"),
         title = i18n$tr("b_hero_title"),
-        lead = i18n$tr("b_hero_lead"),
-        chips = c("MCMCtree", "MrBayes", "RevBayes", "User")
+        lead = i18n$tr("b_hero_lead")
       )
     })
 
@@ -199,10 +199,6 @@ mod_b_server <- function(id, state, set_b, ui_prefs) {
             label = i18n$tr("b_redraw"),
             class = "btn-outline-primary btn-sm"
           )
-        ),
-        shiny::conditionalPanel(
-          condition = sprintf("input['%s'] === true", ns("auto_redraw")),
-          htmltools::tags$p(class = "form-hint", i18n$tr("b_redraw_hint"))
         ),
         shiny::conditionalPanel(
           condition = sprintf("input['%s'] === false", ns("auto_redraw")),
@@ -288,16 +284,8 @@ mod_b_server <- function(id, state, set_b, ui_prefs) {
       if (!isTRUE(b$data_ready)) {
         # A failed load must show up where the work is, not only in the 380px
         # settings rail that may well be scrolled out of view.
-        report <- b$source_report
-        if (!is.null(report) && !isTRUE(report$ok)) {
-          fmt <- report$error %||% list(text = i18n$tr("b_plot_failed"), detail = NULL)
-          return(htmltools::tags$div(
-            class = "alert alert-danger app-alert", role = "alert",
-            htmltools::tags$strong(i18n$tr("b_source_status")),
-            htmltools::tags$p(error_text(fmt)),
-            if (!is.null(fmt$detail)) htmltools::tags$pre(class = "code-block", fmt$detail)
-          ))
-        }
+        # Source errors stay once, in the rail beside the controls that caused
+        # them; repeating the same alert over the canvas triples the message.
         return(htmltools::tags$p(
           class = "plot-caption",
           i18n$tr("b_preview_empty")
@@ -331,19 +319,50 @@ mod_b_server <- function(id, state, set_b, ui_prefs) {
         )
       }
       report <- b$source_report
-      summary <- if (!is.null(report$n_tip) && !is.null(report$n_node)) {
-        i18n$tr("b_source_summary", report$n_tip, report$n_node)
+      meta <- list()
+      if (!is.null(kind_label) && nzchar(kind_label)) {
+        meta[[length(meta) + 1L]] <- htmltools::tags$span(
+          class = "meta-strong", kind_label
+        )
+      }
+      if (!is.null(report$n_tip) && !is.null(report$n_node)) {
+        meta[[length(meta) + 1L]] <- htmltools::tags$span(
+          i18n$tr("b_source_summary", report$n_tip, report$n_node)
+        )
+      }
+      for (item in list(
+        rows = if (!is.null(report$n_rows) && !is.na(report$n_rows)) {
+          i18n$tr("b_source_rows", report$n_rows)
+        } else NULL,
+        nodes = if (!is.null(report$n_nodes) && !is.na(report$n_nodes)) {
+          i18n$tr("b_source_nodes", report$n_nodes)
+        } else NULL,
+        runs = if (!is.null(report$n_runs) && !is.na(report$n_runs)) {
+          i18n$tr("b_source_runs", report$n_runs)
+        } else NULL
+      )) {
+        if (!is.null(item) && nzchar(item)) {
+          meta[[length(meta) + 1L]] <- htmltools::tags$span(item)
+        }
+      }
+      meta_html <- if (length(meta)) {
+        htmltools::tags$p(
+          class = "plot-meta",
+          lapply(seq_along(meta), function(i) {
+            htmltools::tagList(
+              if (i > 1L) {
+                htmltools::tags$span(class = "meta-rule", `aria-hidden` = "true")
+              },
+              meta[[i]]
+            )
+          })
+        )
       } else {
         NULL
       }
-      meta <- paste(c(kind_label, summary), collapse = " \u00b7 ")
       htmltools::tags$div(
         class = "plot-status",
-        htmltools::tags$p(i18n$tr("b_plot_ready")),
-        if (nzchar(meta)) htmltools::tags$p(class = "form-hint", meta),
-        if (isTRUE(b$params$add_time_scale)) {
-          htmltools::tags$p(class = "form-hint", i18n$tr("b_plot_legend"))
-        },
+        meta_html,
         if (!is.null(report$n_tip) && is.finite(report$n_tip) && report$n_tip > 80) {
           htmltools::tags$p(
             class = "form-hint",
@@ -386,8 +405,7 @@ mod_b_server <- function(id, state, set_b, ui_prefs) {
           outputId = ns("download_plot"),
           label = label,
           class = "btn-primary"
-        ),
-        htmltools::tags$p(class = "form-hint", i18n$tr("b_export_note"))
+        )
       )
     })
 
@@ -434,6 +452,20 @@ mod_b_server <- function(id, state, set_b, ui_prefs) {
       contentType = "application/octet-stream"
     )
 
+    mod_b_viz_un_suspend(output)
     invisible(list(plot_error = plot_error, plot_params = plot_params))
   })
+}
+
+# The workbench lives in an inactive nav panel at load time. Shiny suspends
+# hidden outputs and only asks for them on the tab-shown event; when that
+# event is missed the panel opens as an empty shell. This page is cheap to
+# build, so it is rendered up front and always ready.
+mod_b_viz_un_suspend <- function(output) {
+  for (name in c(
+    "hero", "sidebar", "plot_toolbar", "time_tree",
+    "plot_canvas", "plot_status", "export_actions"
+  )) {
+    shiny::outputOptions(output, name, suspendWhenHidden = FALSE)
+  }
 }

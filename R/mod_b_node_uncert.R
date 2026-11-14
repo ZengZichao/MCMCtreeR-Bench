@@ -5,7 +5,7 @@ b_node_uncert_panel_ui <- function(ns, i18n, b) {
   htmltools::tagList(
     shiny::selectInput(
       inputId = ns("node_method"),
-      label = i18n$tr("b_node_method"),
+      label = htmltools::tags$span(class = "visually-hidden", i18n$tr("b_node_method")),
       choices = stats::setNames(
         c("bar", "node.length", "full.length", "none"),
         c(
@@ -16,7 +16,6 @@ b_node_uncert_panel_ui <- function(ns, i18n, b) {
       selected = params$node_method,
       width = "100%"
     ),
-    htmltools::tags$p(class = "form-hint", i18n$tr("b_node_method_hint")),
     shiny::conditionalPanel(
       condition = sprintf("input['%s'] === 'phylogram'", ns("plot_type")),
       shiny::textInput(
@@ -37,12 +36,15 @@ b_node_uncert_panel_ui <- function(ns, i18n, b) {
         label = i18n$tr("b_tip_lengths"),
         value = isTRUE(params$tip_lengths)
       ),
-      shiny::textInput(
-        inputId = ns("tip_bar_col"),
-        label = i18n$tr("b_tip_bar_col"),
-        value = params$tip_bar_col,
-        placeholder = i18n$tr("b_color_placeholder"),
-        width = "100%"
+      shiny::conditionalPanel(
+        condition = sprintf("input['%s'] === true", ns("tip_lengths")),
+        shiny::textInput(
+          inputId = ns("tip_bar_col"),
+          label = i18n$tr("b_tip_bar_col"),
+          value = params$tip_bar_col,
+          placeholder = i18n$tr("b_color_placeholder"),
+          width = "100%"
+        )
       )
     ),
     shiny::conditionalPanel(

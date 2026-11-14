@@ -42,3 +42,11 @@ test_that("button click detection ignores initial values", {
   expect_true(is_button_click("2"))
   expect_false(is_button_click(c(1, 2)))
 })
+
+test_that("bslib task buttons count as clicks", {
+  # input_task_button sends list(value = n, autoReset = TRUE); the numeric-only
+  # check used to treat every task button as untouched.
+  expect_true(is_button_click(list(value = 1, autoReset = TRUE)))
+  expect_false(is_button_click(list(value = 0, autoReset = TRUE)))
+  expect_false(is_button_click(list(value = numeric(), autoReset = TRUE)))
+})

@@ -68,8 +68,28 @@ METHOD_SPECS <- list(
 )
 
 calibration_methods <- function() names(METHOD_SPECS)
+
+# Display names for the calibration methods. The method keys are upstream
+# argument values and must never reach the interface as button or select text.
+METHOD_LABELS <- c(
+  cauchy = "Cauchy",
+  skewT = "Skew-t",
+  skewNormal = "Skew-normal",
+  gamma = "Gamma",
+  bound = "Bound",
+  upper = "Upper bound",
+  fixed = "Fixed"
+)
+
+method_label <- function(method) {
+  method <- as.character(method %||% "")[1]
+  label <- METHOD_LABELS[[method]]
+  if (is.null(label)) method else unname(label)
+}
+
 calibration_method_labels <- function() {
-  stats::setNames(calibration_methods(), calibration_methods())
+  methods <- calibration_methods()
+  stats::setNames(methods, vapply(methods, method_label, character(1)))
 }
 
 missing_num <- function(x) {

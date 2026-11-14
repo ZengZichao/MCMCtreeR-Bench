@@ -41,7 +41,7 @@ b_appearance_panel_ui <- function(ns, i18n, b) {
     ),
     shiny::numericInput(
       inputId = ns("plot_height_in"),
-      label = i18n$tr("b_plot_height"),
+      label = i18n$tr("lbl_plot_height"),
       value = params$plot_height_in,
       min = 3, max = 12, step = 0.5, width = "100%"
     )

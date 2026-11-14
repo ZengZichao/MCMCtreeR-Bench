@@ -5,8 +5,6 @@ step1_ui <- function(ns, i18n, a) {
   htmltools::tagList(
     htmltools::tags$div(
       class = "step-block",
-      htmltools::tags$h2(class = "step-title", i18n$tr("step1_title")),
-      htmltools::tags$p(class = "step-hint", i18n$tr("step1_hint")),
       shiny::radioButtons(
         inputId = ns("load_mode"),
         label = i18n$tr("load_mode_label"),
@@ -28,6 +26,10 @@ step1_ui <- function(ns, i18n, a) {
           buttonLabel = i18n$tr("browse"),
           placeholder = i18n$tr("upload_none"),
           width = "100%"
+        ),
+        htmltools::tags$p(
+          class = "form-hint",
+          i18n$tr("tree_file_hint", format_mb(LIMITS$max_upload_bytes))
         )
       ),
       shiny::conditionalPanel(
@@ -41,29 +43,13 @@ step1_ui <- function(ns, i18n, a) {
           width = "100%"
         )
       ),
-      shiny::conditionalPanel(
-        condition = sprintf("input['%s'] === 'example'", ns("load_mode")),
-        htmltools::tags$p(class = "form-hint", i18n$tr("tree_example_hint"))
-      ),
-      # The action sits directly under its input; the reference hints used to
-      # push it two paragraphs away from the field it acts on.
+      # The action sits directly under its input.
       htmltools::tags$div(
         class = "step-action",
         shiny::actionButton(
           inputId = ns("load_tree"),
           label = i18n$tr("btn_load_tree"),
           class = "btn-primary"
-        )
-      ),
-      shiny::conditionalPanel(
-        condition = sprintf("input['%s'] === 'file'", ns("load_mode")),
-        htmltools::tags$p(
-          class = "form-hint",
-          i18n$tr("file_upload_hint", ".tre, .nwk, .newick, .nexus, .nex, .txt")
-        ),
-        htmltools::tags$p(
-          class = "form-hint",
-          i18n$tr("max_upload_hint", format_mb(LIMITS$max_upload_bytes))
         )
       ),
       shiny::uiOutput(ns("tree_report"))
@@ -213,8 +199,8 @@ mod_a_load_tree_server <- function(input, output, session, ns, state, set_a,
     if (!isTRUE(report$is_binary)) warnings <- c(warnings, i18n$tr("err_not_binary_warn"))
 
     htmltools::tags$div(
-      class = "alert alert-success app-alert", role = "status",
-      htmltools::tags$strong(i18n$tr("tree_report_title")),
+      class = "tree-report-block", role = "status",
+      htmltools::tags$p(class = "tree-report-title", i18n$tr("tree_report_title")),
       htmltools::tags$dl(
         class = "tree-report",
         htmltools::tags$dt(i18n$tr("tree_source_label")),
@@ -231,7 +217,7 @@ mod_a_load_tree_server <- function(input, output, session, ns, state, set_a,
       if (length(warnings)) htmltools::tags$ul(
         class = "tree-warnings",
         lapply(warnings, function(x) htmltools::tags$li(x))
-      ) else htmltools::tags$p(class = "form-hint", i18n$tr("tree_valid"))
+      )
     )
   })
 }
