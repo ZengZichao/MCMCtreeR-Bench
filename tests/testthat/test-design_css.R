@@ -4,8 +4,14 @@
 # colours.
 
 css_text <- function() {
-  path <- file.path("..", "..", "inst", "app", "www", "custom.css")
-  if (!file.exists(path)) path <- system.file("app", "www", "custom.css", package = "mcmctreer")
+  path <- ""
+  root <- pkg_source_root()
+  if (!is.na(root)) {
+    path <- file.path(root, "inst", "app", "www", "custom.css")
+  }
+  if (!nzchar(path) || !file.exists(path)) {
+    path <- system.file("app", "www", "custom.css", package = "mcmctreer")
+  }
   expect_true(file.exists(path), info = "custom.css must exist")
   paste(readLines(path, warn = FALSE), collapse = "\n")
 }
@@ -58,7 +64,7 @@ test_that("notification rules out-specify bslib's doubled selectors", {
 
 test_that("the Module B rail is a hairline column, not a card stack", {
   css <- css_text()
-  src <- paste(readLines("../../R/mod_b_viz.R", warn = FALSE), collapse = "\n")
+  src <- paste(readLines(source_file("R", "mod_b_viz.R"), warn = FALSE), collapse = "\n")
   sidebar <- regmatches(
     css,
     regexpr("\\.b-workbench \\.bslib-sidebar-layout > \\.b-sidebar\\s*\\{[^}]*\\}", css)
@@ -104,14 +110,14 @@ test_that("the canvas is a sheet on rules and the empty state is a well", {
     info = "the well needs a dark variant")})
 
 test_that("the placeholder draws no text and brings no paper of its own", {
-  theme <- readLines("../../R/fct_plot_theme.R", warn = FALSE)
+  theme <- readLines(source_file("R", "fct_plot_theme.R"), warn = FALSE)
   start <- grep("^plot_empty_state <- function", theme)
   expect_length(start, 1L)
   stop <- start + which(theme[start:length(theme)] == "}")[1] - 1L
   body <- paste(theme[start:stop], collapse = "\n")
   expect_false(grepl("graphics::text", body),
     info = "placeholder wording belongs in the DOM, where tr() can reach it")
-  viz <- paste(readLines("../../R/mod_b_viz.R", warn = FALSE), collapse = "\n")
+  viz <- paste(readLines(source_file("R", "mod_b_viz.R"), warn = FALSE), collapse = "\n")
   expect_match(viz, "cols\\$bg\\s*<-\\s*NA",
     info = "an opaque raster background cuts a white band across the well")
 })
@@ -311,7 +317,7 @@ test_that("!important stays within budget and no rule block is duplicated", {
 })
 
 test_that("no UI string is drawn into a plot without going through tr()", {
-  files <- list.files("../../R", pattern = "\\.R$", full.names = TRUE)
+  files <- source_r_files()
   offenders <- character()
   for (f in files) {
     lines <- readLines(f, warn = FALSE)
@@ -326,7 +332,7 @@ test_that("no UI string is drawn into a plot without going through tr()", {
 })
 
 test_that("copy uses no middle-dot separators", {
-  files <- list.files("../../R", pattern = "\\.R$", full.names = TRUE)
+  files <- source_r_files()
   hits <- vapply(files, function(f) {
     any(grepl("\u00b7", readLines(f, warn = FALSE), fixed = TRUE))
   }, logical(1))
@@ -334,7 +340,7 @@ test_that("copy uses no middle-dot separators", {
 })
 
 test_that("the calibration table exposes table semantics", {
-  src <- paste(readLines("../../R/mod_a_calibration_table.R", warn = FALSE), collapse = "\n")
+  src <- paste(readLines(source_file("R", "mod_a_calibration_table.R"), warn = FALSE), collapse = "\n")
   expect_match(src, "class = \"calib-table\",\\s*role = \"table\"")
   expect_match(src, "role = \"columnheader\"")
   expect_match(src, "role = \"rowheader\"")

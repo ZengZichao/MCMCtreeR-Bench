@@ -10,7 +10,7 @@ app_sys <- function(...) {
 example_tree_file <- function() {
   path <- app_sys("extdata", "example_tree.tre")
   if (!nzchar(path) || !file.exists(path)) {
-    path <- file.path("inst", "extdata", "example_tree.tre")
+    stop("Bundled example tree not found; install the package or run pkgload::load_all().")
   }
   path
 }
@@ -18,15 +18,15 @@ example_tree_file <- function() {
 example_chain_file <- function() {
   path <- app_sys("extdata", "example_chain.tsv")
   if (!nzchar(path) || !file.exists(path)) {
-    path <- file.path("inst", "extdata", "example_chain.tsv")
+    stop("Bundled example chain not found; install the package or run pkgload::load_all().")
   }
   path
 }
 
 app_www_dir <- function() {
   path <- app_sys("app", "www")
-  if (is.null(path) || !nzchar(path) || !dir.exists(path)) {
-    path <- file.path("inst", "app", "www")
+  if (!nzchar(path) || !dir.exists(path)) {
+    stop("Bundled web assets not found; install the package or run pkgload::load_all().")
   }
   path
 }

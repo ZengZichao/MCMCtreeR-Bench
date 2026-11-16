@@ -98,8 +98,8 @@ a_remove_node <- function(state, set_a, bump, i18n, node) {
   invisible(TRUE)
 }
 
-mod_a_select_nodes_server <- function(input, output, session, ns, state, set_a,
-                                      bump, i18n) {
+a_select_nodes_server <- function(input, output, session, ns, state, set_a,
+                                 bump, i18n) {
   shiny::observeEvent(input$add_node, {
     if (!is_button_click(input$add_node)) return()
     a_add_node(state, set_a, bump, i18n, input$manual_node)

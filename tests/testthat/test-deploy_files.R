@@ -18,7 +18,10 @@ test_that("DESCRIPTION pins the upstream commit and declares pkgload", {
   skip_if_not(file.exists(desc_path), "DESCRIPTION is not available")
   desc <- read.dcf(desc_path)
   expect_identical(unname(desc[1, "Version"]), "0.1.0")
-  expect_true(grepl("pkgload", desc[1, "Imports"], fixed = TRUE))
+  # pkgload is only needed by the source entry point (app.R), not by the
+  # package code, so it belongs in Suggests rather than Imports.
+  expect_true(grepl("pkgload", desc[1, "Suggests"], fixed = TRUE))
+  expect_false(grepl("pkgload", desc[1, "Imports"], fixed = TRUE))
   expect_true(grepl(UPSTREAM$commit, desc[1, "Remotes"], fixed = TRUE))
   expect_true(grepl("GPL", desc[1, "License"], fixed = TRUE))
 })

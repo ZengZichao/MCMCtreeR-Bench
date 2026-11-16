@@ -38,7 +38,6 @@ app_server <- function(input, output, session) {
         plot_theme = "print"
       ),
       auto_redraw = TRUE,
-      plot_error = NULL,
       source_key = 0L,
       loaded_at = NULL
     )

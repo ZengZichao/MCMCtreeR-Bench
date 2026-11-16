@@ -63,8 +63,7 @@ mcmctreer::run_app()
 ```
 
 **不要**使用 `install.packages("MCMCtreeR")`：该包已从 CRAN 归档，该命令会失败。
-从源码目录运行时，可使用 `devtools::load_all()`（或 `pkgload::load_all()`）
-后调用 `mcmctreer::run_app()`。
+从源码目录运行时，可使用 `pkgload::load_all()` 后调用 `mcmctreer::run_app()`。
 
 ## 隐私
 

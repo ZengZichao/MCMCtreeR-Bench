@@ -3,13 +3,7 @@
 parameter_table_html <- function(parameters, i18n) {
   if (is.null(parameters)) return(NULL)
   values <- as.numeric(parameters)
-  labels <- colnames(parameters)
-  if (is.null(labels) || length(labels) != length(values)) {
-    labels <- names(parameters)
-  }
-  if (is.null(labels) || length(labels) != length(values)) {
-    labels <- paste0("p", seq_along(values))
-  }
+  labels <- parameter_labels(values, parameters)
   htmltools::tags$table(
     class = "table table-sm parameter-table",
     htmltools::tags$thead(
@@ -54,8 +48,8 @@ step5_ui <- function(ns, i18n, a) {
   )
 }
 
-mod_a_estimate_server <- function(input, output, session, ns, state, set_a,
-                                  bump, i18n, ui_prefs, stale, workspace) {
+a_estimate_server <- function(input, output, session, ns, state, set_a,
+                              bump, i18n, ui_prefs, stale, workspace) {
   shiny::observeEvent(input$run_estimation, {
     if (!is_button_click(input$run_estimation)) return()
     a <- state$a
@@ -108,7 +102,6 @@ mod_a_estimate_server <- function(input, output, session, ns, state, set_a,
       i18n$tr("msg_estimate_done", length(outcome$nodes)),
       type = "message"
     )
-    gc()
   })
 
   shiny::observeEvent(state$a$results, {

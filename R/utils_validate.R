@@ -213,16 +213,6 @@ update_calibration <- function(calibrated, node, ..., clear_adv = FALSE) {
   calibrated
 }
 
-set_adv_raw <- function(calibrated, node, raw) {
-  node <- as.integer(node)
-  for (i in seq_along(calibrated)) {
-    if (!identical(as.integer(calibrated[[i]]$node), node)) next
-    calibrated[[i]]$adv_raw <- raw
-    calibrated[[i]]$adv <- parse_adv_raw(calibrated[[i]]$method, raw)$values
-  }
-  calibrated
-}
-
 parse_optional_number <- function(value) {
   value <- trimws(as.character(value %||% "")[1])
   if (!nzchar(value) || is.na(value)) return(list(value = NULL, error = NULL))
@@ -344,10 +334,6 @@ calibration_issues <- function(calibrated, include_adv = TRUE) {
 
 calibration_valid <- function(calibrated, include_adv = TRUE) {
   length(calibrated) > 0 && length(calibration_issues(calibrated, include_adv = include_adv)) == 0
-}
-
-advanced_valid <- function(calibrated) {
-  length(advanced_issues(calibrated)) == 0
 }
 
 issue_text <- function(issue, i18n) {
@@ -500,6 +486,20 @@ format_parameter_value <- function(value) {
   format(value, scientific = FALSE, digits = 8, trim = TRUE, drop0trailing = TRUE)
 }
 
+# Shared label resolution for a parameter vector: column names, then element
+# names, then a positional fallback. Kept in one place so the estimate table
+# and the summary column cannot drift apart.
+parameter_labels <- function(values, parameters) {
+  labels <- colnames(parameters)
+  if (is.null(labels) || length(labels) != length(values)) {
+    labels <- names(parameters)
+  }
+  if (is.null(labels) || length(labels) != length(values)) {
+    labels <- paste0("p", seq_along(values))
+  }
+  labels
+}
+
 parameter_summary <- function(results) {
   if (is.null(results) || length(results$nodes) == 0) {
     return(data.frame(node = integer(), method = character(), parameters = character()))
@@ -507,13 +507,7 @@ parameter_summary <- function(results) {
   rows <- lapply(results$nodes, function(one) {
     params <- one$parameters
     values <- as.numeric(params)
-    labels <- colnames(params)
-    if (is.null(labels) || length(labels) != length(values)) {
-      labels <- names(params)
-    }
-    if (is.null(labels) || length(labels) != length(values)) {
-      labels <- paste0("p", seq_along(values))
-    }
+    labels <- parameter_labels(values, params)
     text <- paste(
       paste0(labels, "=", vapply(values, format_parameter_value, character(1))),
       collapse = ", "

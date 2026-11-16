@@ -91,9 +91,13 @@ with_plot_theme <- function(cols, expr) {
   force(expr)
 }
 
-# MCMCtreeR hard-codes its geological band palette in the package namespace.
-# Swap those bindings for neutral, theme-aware bands while the plot is drawn.
-with_mcmctree_timescale <- function(cols, expr) {
+# MCMCtreeR hard-codes its geological band palette in the package namespace and
+# exposes no argument to override it. Rather than mutate that shared namespace
+# (which R CMD check flags and which concurrent sessions could observe), the
+# plot function is evaluated against a throwaway child environment that carries
+# neutral, theme-aware bands. The child's parent is the MCMCtreeR namespace, so
+# every other symbol still resolves exactly as before.
+with_mcmctree_timescale <- function(cols, args) {
   cols <- cols %||% plot_colors("print")
   ns <- asNamespace("MCMCtreeR")
   palette_names <- c(
@@ -103,31 +107,26 @@ with_mcmctree_timescale <- function(cols, expr) {
   palette_names <- palette_names[vapply(
     palette_names, exists, logical(1), envir = ns, inherits = FALSE
   )]
-  old <- lapply(palette_names, get, envir = ns)
-  names(old) <- palette_names
   band_cols <- if (identical(cols$theme, "dark")) {
     c("#141414", "#121212", "#161616", "#181818")
   } else {
     c("#fcfcfc", "#fafafa", "#f7f7f7", "#f4f4f4")
   }
+  shadow <- new.env(parent = ns)
   for (nm in palette_names) {
-    original <- old[[nm]]
-    replacement <- stats::setNames(
-      rep(band_cols, length.out = length(original)),
-      names(original)
+    original <- get(nm, envir = ns)
+    assign(
+      nm,
+      stats::setNames(
+        rep(band_cols, length.out = length(original)),
+        names(original)
+      ),
+      envir = shadow
     )
-    if (bindingIsLocked(nm, ns)) unlockBinding(nm, ns)
-    assign(nm, replacement, envir = ns)
-    lockBinding(nm, ns)
   }
-  on.exit({
-    for (nm in palette_names) {
-      if (bindingIsLocked(nm, ns)) unlockBinding(nm, ns)
-      assign(nm, old[[nm]], envir = ns)
-      lockBinding(nm, ns)
-    }
-  }, add = TRUE)
-  force(expr)
+  plot_fn <- get("MCMC.tree.plot", envir = ns)
+  environment(plot_fn) <- shadow
+  do.call(plot_fn, args)
 }
 
 # Quiet empty state: a line-art phylogeny watermarked at the centre of the

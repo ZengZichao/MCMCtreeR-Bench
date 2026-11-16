@@ -133,8 +133,8 @@ calib_row_untouched <- function(one) {
   isTRUE(min_empty && max_empty)
 }
 
-mod_a_calibration_table_server <- function(input, output, session, ns, state,
-                                           set_a, bump, i18n) {
+a_calibration_table_server <- function(input, output, session, ns, state,
+                                      set_a, bump, i18n) {
   shiny::observeEvent(
     {
       calibrated <- state$a$calibrated

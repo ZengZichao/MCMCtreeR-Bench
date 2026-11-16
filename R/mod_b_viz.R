@@ -127,7 +127,7 @@ mod_b_server <- function(id, state, set_b, ui_prefs) {
       ignoreNULL = FALSE
     )
 
-    mod_b_data_source_server(input, output, session, ns, state, set_b, i18n)
+    b_data_source_server(input, output, session, ns, state, set_b, i18n)
 
     output$hero <- shiny::renderUI({
       hero_content(
@@ -163,7 +163,7 @@ mod_b_server <- function(id, state, set_b, ui_prefs) {
         )
       )
       # The burn-in / run-count inputs only exist for MrBayes and RevBayes, so
-      # offering an "分析设置" panel that expands to nothing is a dead end.
+      # offering an "analysis settings" panel that expands to nothing is a dead end.
       analysis <- shiny::isolate(input$analysis_type) %||% b$analysis_type
       if (identical(analysis, "MrBayes") || identical(analysis, "RevBayes")) {
         panels <- c(panels, list(bslib::accordion_panel(
@@ -239,7 +239,7 @@ mod_b_server <- function(id, state, set_b, ui_prefs) {
       outcome <- tryCatch(
         run_with_warnings(with_plot_theme(
           cols,
-          with_mcmctree_timescale(cols, do.call(MCMCtreeR::MCMC.tree.plot, args))
+          with_mcmctree_timescale(cols, args)
         )),
         error = function(e) e
       )
@@ -255,7 +255,7 @@ mod_b_server <- function(id, state, set_b, ui_prefs) {
 
       plot_error(NULL)
       if (length(outcome$warnings)) {
-        message("[module B] ", paste(unique(outcome$warnings), collapse = " | "))
+        message(paste(unique(outcome$warnings), collapse = " | "))
       }
       invisible(NULL)
     }, bg = "transparent", height = function() {
@@ -436,7 +436,6 @@ mod_b_server <- function(id, state, set_b, ui_prefs) {
             plot_theme = theme, mode = mode
           )
           copy_download_file(path, file, ws)
-          gc()
           TRUE
         }, error = function(e) e)
 

@@ -155,12 +155,12 @@ mod_a_server <- function(id, state, set_a, ui_prefs) {
       go_step(min(6L, as.integer(state$a$step) + 1L))
     })
 
-    mod_a_load_tree_server(input, output, session, ns, state, set_a, bump, i18n, workspace)
-    mod_a_select_nodes_server(input, output, session, ns, state, set_a, bump, i18n)
-    mod_a_calibration_table_server(input, output, session, ns, state, set_a, bump, i18n)
-    mod_a_advanced_params_server(input, output, session, ns, state, set_a, i18n)
-    mod_a_estimate_server(input, output, session, ns, state, set_a, bump, i18n, ui_prefs, stale, workspace)
-    mod_a_export_server(input, output, session, ns, state, set_a, bump, i18n, ui_prefs, stale, workspace)
+    a_load_tree_server(input, output, session, ns, state, set_a, bump, i18n, workspace)
+    a_select_nodes_server(input, output, session, ns, state, set_a, bump, i18n)
+    a_calibration_table_server(input, output, session, ns, state, set_a, bump, i18n)
+    a_advanced_params_server(input, output, session, ns, state, set_a, i18n)
+    a_estimate_server(input, output, session, ns, state, set_a, bump, i18n, ui_prefs, stale, workspace)
+    a_export_server(input, output, session, ns, state, set_a, bump, i18n, ui_prefs, stale, workspace)
 
     output$step_nav_title <- shiny::renderUI(i18n$tr("step_nav_title"))
     output$preview_title <- shiny::renderUI({

@@ -57,8 +57,8 @@ step1_ui <- function(ns, i18n, a) {
   )
 }
 
-mod_a_load_tree_server <- function(input, output, session, ns, state, set_a,
-                                   bump, i18n, workspace) {
+a_load_tree_server <- function(input, output, session, ns, state, set_a,
+                               bump, i18n, workspace) {
   shiny::observeEvent(input$load_mode, {
     if (is.null(input$load_mode)) return()
     a <- state$a
@@ -176,7 +176,6 @@ mod_a_load_tree_server <- function(input, output, session, ns, state, set_a,
 
     notify <- i18n$tr("msg_tree_loaded", report$n_tip, report$n_node)
     user_notification(notify, type = "message")
-    gc()
   })
 
   output$tree_report <- shiny::renderUI({

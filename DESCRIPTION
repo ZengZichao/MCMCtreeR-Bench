@@ -25,10 +25,7 @@ Imports:
     golem,
     MCMCtreeR,
     ape,
-    sn,
-    coda,
     data.table,
-    pkgload,
     ragg,
     svglite
 Remotes:
@@ -36,6 +33,7 @@ Remotes:
 Suggests:
     testthat (>= 3.0.0),
     jsonlite,
+    pkgload,
     renv,
     rsconnect
 Config/testthat/edition: 3

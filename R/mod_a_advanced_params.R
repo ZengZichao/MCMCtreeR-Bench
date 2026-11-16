@@ -91,8 +91,8 @@ step4_ui <- function(ns, i18n, a) {
   )
 }
 
-mod_a_advanced_params_server <- function(input, output, session, ns, state,
-                                         set_a, i18n) {
+a_advanced_params_server <- function(input, output, session, ns, state,
+                                    set_a, i18n) {
   shiny::observeEvent(
     {
       calibrated <- state$a$calibrated

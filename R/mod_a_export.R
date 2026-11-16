@@ -44,8 +44,8 @@ step6_ui <- function(ns, i18n, a) {
   )
 }
 
-mod_a_export_server <- function(input, output, session, ns, state, set_a,
-                                bump, i18n, ui_prefs, stale, workspace) {
+a_export_server <- function(input, output, session, ns, state, set_a,
+                            bump, i18n, ui_prefs, stale, workspace) {
   shiny::observeEvent(
     list(
       input$export_width,
@@ -250,7 +250,6 @@ mod_a_export_server <- function(input, output, session, ns, state, set_a,
         )
       }
       copy_download_file(path, file, ws)
-      gc()
     },
     # Shiny requires a character contentType here; the file extension still
     # tells the browser how to open PDF, PNG or SVG.

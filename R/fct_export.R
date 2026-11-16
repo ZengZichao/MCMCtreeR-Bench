@@ -127,7 +127,7 @@ export_time_tree <- function(path, args, dev = c("pdf", "png", "svg"),
     path = path, width = width, height = height, res = res, dev = dev,
     plot_theme = plot_theme, mode = mode,
     draw = function(cols) {
-      with_mcmctree_timescale(cols, do.call(MCMCtreeR::MCMC.tree.plot, args))
+      with_mcmctree_timescale(cols, args)
     }
   )
 }

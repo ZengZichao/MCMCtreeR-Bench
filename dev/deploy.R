@@ -8,13 +8,25 @@
 # (rsconnect::connectCloudUser() or connectCloudClientCredentials()).
 
 app_name <- Sys.getenv("CONNECT_CLOUD_APP", "mcmctreer-gui-staging")
-account <- Sys.getenv("CONNECT_CLOUD_ACCOUNT", "zengzichao")
+account <- Sys.getenv("CONNECT_CLOUD_ACCOUNT", "")
 server <- "connect.posit.cloud"
 manifest_path <- "manifest.json"
 
-# 1) The Connect Cloud account must be registered.
+# 1) The Connect Cloud account must be registered. When the environment does
+#    not name one, fall back to the only registered account on the server.
 accounts <- rsconnect::accounts()
-if (!any(accounts$name == account & accounts$server == server)) {
+cloud <- accounts[accounts$server == server, , drop = FALSE]
+if (!nzchar(account)) {
+  if (nrow(cloud) == 1L) {
+    account <- cloud$name[1]
+  } else if (nrow(cloud) > 1L) {
+    stop(
+      "Set CONNECT_CLOUD_ACCOUNT to one of: ",
+      paste(cloud$name, collapse = ", ")
+    )
+  }
+}
+if (!nzchar(account) || !any(accounts$name == account & accounts$server == server)) {
   stop(
     "Connect Cloud account not registered. Run rsconnect::connectCloudUser() ",
     "or rsconnect::connectCloudClientCredentials() first."

@@ -822,7 +822,7 @@ TRANSLATIONS <- list(
     b_source_posterior = "\u540e\u9a8c",
     b_source_example = "\u793a\u4f8b",
     b_figtree_file = "FigTree \u8f93\u51fa\u6587\u4ef6",
-    b_figtree_hint = "MCMCtree \u751f\u6210\u7684\u5236\u8868\u7b26\u5206\u9694 FigTree \u6587\u4ef6。",
+    b_figtree_hint = "MCMCtree \u751f\u6210\u7684\u5236\u8868\u7b26\u5206\u9694 FigTree \u6587\u4ef6\u3002",
     b_tree_file = "\u6811\u6587\u4ef6",
     b_chain_file = "\u540e\u9a8c\u8868",
     b_chain_hint = "\u5236\u8868\u7b26\u5206\u9694\uff0c\u6bcf\u884c\u4e00\u4e2a\u6837\u672c\uff0c\u5217\u4e3a t_n1\u3001t_n2 \u7b49\u3002",

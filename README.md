@@ -70,7 +70,7 @@ mcmctreer::run_app()
 
 Do **not** use `install.packages("MCMCtreeR")`: the package was archived on
 CRAN and that command will fail. For a source checkout, use
-`devtools::load_all()` (or `pkgload::load_all()`) and `mcmctreer::run_app()`.
+`pkgload::load_all()` and then `mcmctreer::run_app()`.
 
 ## Privacy
 

@@ -15,3 +15,4 @@
 ^LICENSE$
 ^dev$
 ^\.Rprofile$
+^\.Rlib$

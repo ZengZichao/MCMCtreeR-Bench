@@ -244,12 +244,11 @@ b_clear_source <- function(b) {
   b$source_report <- NULL
   b$source_kind <- NULL
   b$data_ready <- FALSE
-  b$plot_error <- NULL
   b
 }
 
-mod_b_data_source_server <- function(input, output, session, ns, state, set_b,
-                                     i18n) {
+b_data_source_server <- function(input, output, session, ns, state, set_b,
+                                i18n) {
   workspace <- session_workspace(session, "b")
 
   shiny::observeEvent(input$analysis_type, {
@@ -453,7 +452,6 @@ mod_b_data_source_server <- function(input, output, session, ns, state, set_b,
 
     b$source_report <- report
     b$data_ready <- TRUE
-    b$plot_error <- NULL
     if (!is.na(report$n_tip)) {
       b$params$cex_tips <- viz_auto_tip_cex(report$n_tip)
       b$params$plot_height_in <- viz_auto_plot_height(report$n_tip)
@@ -476,7 +474,6 @@ mod_b_data_source_server <- function(input, output, session, ns, state, set_b,
     if (!is.na(report$n_rows) && report$n_rows > LIMITS$manual_redraw_rows) {
       user_notification(i18n$tr("warn_plot_slow"), type = "warning", duration = 8)
     }
-    gc()
   })
 
   output$source_status <- shiny::renderUI({
